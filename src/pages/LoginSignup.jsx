@@ -5,7 +5,7 @@ export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
+    <div className="min-h-screen w-full h-100vh flex items-center justify-center bg-gray-100 dark:bg-gray-900 px-4">
       <div className="flex flex-col md:flex-row items-center bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden w-full max-w-5xl">
         
         {/* Illustration Section */}

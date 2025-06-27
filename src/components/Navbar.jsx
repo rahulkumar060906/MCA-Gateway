@@ -20,7 +20,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="w-full px-4 py-3 bg-white dark:bg-blue-950 border-b-2 border-b-gray-200 dark:border-b-blue-900 shadow-md flex flex-col justify-around md:flex-row md:items-center md:justify-between">
+    <nav className="w-full px-4 py-3 min-h-[10vh] bg-white dark:bg-blue-950 border-b-2 border-b-gray-200 dark:border-b-blue-900 shadow-md flex flex-col justify-around md:flex-row md:items-center md:justify-between">
       {/* Logo */}
       <div className="flex items-center justify-between md:justify-start gap-2">
         <div className="flex items-center gap-2">

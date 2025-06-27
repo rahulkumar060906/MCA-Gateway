@@ -5,7 +5,11 @@ import Home from './pages/Home';
 import Footer from './components/Footer';
 import PageContainer from './components/PageContainer';
 import LoginSignup from './pages/LoginSignup';
-import './App.css';
+import Study from './pages/Study';
+import Levels from './pages/Levels';
+import About from './pages/About';
+import ContactPage from './pages/Contact';
+import NoticeBoard from './pages/Notice';
 
 function App() {
   const location = useLocation();
@@ -17,6 +21,11 @@ function App() {
       <main className="flex-1 flex flex-col">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/notice" element={<NoticeBoard />} />
+          <Route path="/levels" element={<Levels />} />
+          <Route path="/study" element={<Study />} />
           <Route path="/login" element={<LoginSignup />} />
         </Routes>
       </main>

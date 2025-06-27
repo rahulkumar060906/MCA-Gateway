@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const navigate = useNavigate();
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center py-25 px-2 md:px-0 dark:bg-blue-950 ">
+    <div className="w-full h-full min-h-[80vh] flex flex-col items-center justify-center py-25 px-2 md:px-0 dark:bg-blue-950 ">
       <h1 className="text-3xl md:text-4xl font-bold mb-2 text-gray-800 dark:text-white  text-center">
         Welcome to <span className="text-blue-600 dark:text-blue-400">MCA Gateway</span>
       </h1>
@@ -32,7 +32,8 @@ const Home = () => {
       </div>
       <button
         className="mt-8 px-8 py-3 bg-blue-600 text-white font-semibold rounded-4xl hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 transition-colors"
-        onClick={() =>  navigate('/login')}
+        // onClick={() =>  navigate('/login')}
+        onClick={() =>  navigate('/levels')}
       >
         Get Started
       </button>
