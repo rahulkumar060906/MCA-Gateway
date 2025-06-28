@@ -6,7 +6,7 @@ import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const [theme, setTheme] = useState('light');
-
+  const isLoggedIn = true;
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -53,15 +53,15 @@ const Navbar = () => {
         </li>
       </ul>
       <div className='flex items-center gap-3 justify-between mt-4 md:mt-0'>
-      {/* Login Button */}
-      <Link
-        to="/login"
-        className="mt-4 md:mt-0 ml-0 md:ml-4 px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
-      >
-        Login
-      </Link>
+
+        <Link
+          to={isLoggedIn ? "/dashboard" : "/login"}
+          className="mt-4 md:mt-0 ml-0 md:ml-4 px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+        >
+          {isLoggedIn ? "Dashboard" : "Login"}
+        </Link>
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
-        </div>
+      </div>
     </nav>
   );
 };

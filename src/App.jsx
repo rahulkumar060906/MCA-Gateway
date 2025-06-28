@@ -10,6 +10,7 @@ import Levels from './pages/Levels';
 import About from './pages/About';
 import ContactPage from './pages/Contact';
 import NoticeBoard from './pages/Notice';
+import Dashboard from './pages/Dashboard';
 
 function App() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path='/dashboard' element={<Dashboard/>} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/levels" element={<Levels />} />

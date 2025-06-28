@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import Beginner from './Beginner';
+import BeginnerPath from './Beginner';
 import Intermediate from './Intermediate';
 import Advanced from './Advanced';
 
@@ -47,7 +47,7 @@ export default function Study() {
 
   // Show level-specific component if level is set
   if (selectedLevel) {
-    if (selectedLevel.toLowerCase() === 'beginner') return <Beginner />;
+    if (selectedLevel.toLowerCase() === 'beginner') return <BeginnerPath />;
     if (selectedLevel.toLowerCase() === 'intermediate') return <Intermediate />;
     if (selectedLevel.toLowerCase() === 'advanced') return <Advanced />;
   }

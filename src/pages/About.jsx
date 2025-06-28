@@ -26,7 +26,7 @@ export default function About() {
       {/* Banner */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 mb-10">
         <img
-          src="/images/nimcet-banner.png"
+          src="src\assets\nimcet-banner.png"
           alt="NIMCET Banner"
           className="w-full rounded-md object-cover"
         />

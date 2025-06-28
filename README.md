@@ -1,4 +1,5 @@
 # NIMCET Prep Game Platform
+## MCA Gateway
 
 This is a full stack web application to help NIMCET aspirants prepare in a gamified way. It features:
 

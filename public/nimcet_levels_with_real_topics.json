@@ -1,0 +1,1178 @@
+{
+    "beginner": [
+        {
+            "level": 1,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Set Theory - Basics"
+                },
+                "reasoning": {
+                    "topic": "Odd One Out"
+                },
+                "computer": {
+                    "topic": "What is a Computer?"
+                },
+                "english": {
+                    "topic": "Use of 'a/an'"
+                }
+            }
+        },
+        {
+            "level": 2,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Union & Intersection"
+                },
+                "reasoning": {
+                    "topic": "Number Series"
+                },
+                "computer": {
+                    "topic": "CPU and its Function"
+                },
+                "english": {
+                    "topic": "Use of 'the'"
+                }
+            }
+        },
+        {
+            "level": 3,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Cardinality & Venn Diagrams"
+                },
+                "reasoning": {
+                    "topic": "Alphabet Series"
+                },
+                "computer": {
+                    "topic": "RAM vs ROM"
+                },
+                "english": {
+                    "topic": "Prepositions: in/on/at"
+                }
+            }
+        },
+        {
+            "level": 4,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Basic Counting Principle"
+                },
+                "reasoning": {
+                    "topic": "Direction Sense"
+                },
+                "computer": {
+                    "topic": "Input Devices"
+                },
+                "english": {
+                    "topic": "Synonyms: Common"
+                }
+            }
+        },
+        {
+            "level": 5,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Permutations (Intro)"
+                },
+                "reasoning": {
+                    "topic": "Blood Relation I"
+                },
+                "computer": {
+                    "topic": "Output Devices"
+                },
+                "english": {
+                    "topic": "Antonyms: Common"
+                }
+            }
+        },
+        {
+            "level": 6,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Permutations (With Repetition)"
+                },
+                "reasoning": {
+                    "topic": "Blood Relation II"
+                },
+                "computer": {
+                    "topic": "Types of Computers"
+                },
+                "english": {
+                    "topic": "Subject-Verb Agreement"
+                }
+            }
+        },
+        {
+            "level": 7,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Combinations (Intro)"
+                },
+                "reasoning": {
+                    "topic": "Analogy"
+                },
+                "computer": {
+                    "topic": "Data vs Information"
+                },
+                "english": {
+                    "topic": "Simple vs Present Tense"
+                }
+            }
+        },
+        {
+            "level": 8,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Averages (Mean, Median)"
+                },
+                "reasoning": {
+                    "topic": "Coding-Decoding I"
+                },
+                "computer": {
+                    "topic": "Primary & Secondary Memory"
+                },
+                "english": {
+                    "topic": "Countable vs Uncountable Nouns"
+                }
+            }
+        },
+        {
+            "level": 9,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Mode & Frequency"
+                },
+                "reasoning": {
+                    "topic": "Coding-Decoding II"
+                },
+                "computer": {
+                    "topic": "Hard Disk Basics"
+                },
+                "english": {
+                    "topic": "Capitalization Rules"
+                }
+            }
+        },
+        {
+            "level": 10,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Algebra: Add/Subtract"
+                },
+                "reasoning": {
+                    "topic": "Logical Puzzle I"
+                },
+                "computer": {
+                    "topic": "File vs Folder"
+                },
+                "english": {
+                    "topic": "Verb Forms"
+                }
+            }
+        },
+        {
+            "level": 11,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Algebra: Multiply/Divide"
+                },
+                "reasoning": {
+                    "topic": "Calendar Intro"
+                },
+                "computer": {
+                    "topic": "Software Types"
+                },
+                "english": {
+                    "topic": "Pronouns"
+                }
+            }
+        },
+        {
+            "level": 12,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Factorization with Identities"
+                },
+                "reasoning": {
+                    "topic": "Clock Intro"
+                },
+                "computer": {
+                    "topic": "System vs Application Software"
+                },
+                "english": {
+                    "topic": "Possessive Adjectives"
+                }
+            }
+        },
+        {
+            "level": 13,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Laws of Indices"
+                },
+                "reasoning": {
+                    "topic": "Syllogism Basics"
+                },
+                "computer": {
+                    "topic": "Cloud vs Local Storage"
+                },
+                "english": {
+                    "topic": "Basic Conjunctions"
+                }
+            }
+        },
+        {
+            "level": 14,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Logarithms (Rules)"
+                },
+                "reasoning": {
+                    "topic": "Statement & Conclusion"
+                },
+                "computer": {
+                    "topic": "Virus vs Antivirus"
+                },
+                "english": {
+                    "topic": "Word Families"
+                }
+            }
+        },
+        {
+            "level": 15,
+            "stage": "Beginner",
+            "sections": {
+                "math": {
+                    "topic": "Logarithms (Applications)"
+                },
+                "reasoning": {
+                    "topic": "Mirror/Water Image"
+                },
+                "computer": {
+                    "topic": "Internet Safety"
+                },
+                "english": {
+                    "topic": "Accept vs Except"
+                }
+            }
+        }
+    ],
+    "intermediate": [
+        {
+            "level": 1,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Quadratic Equations - Nature of Roots"
+                },
+                "reasoning": {
+                    "topic": "Syllogism I"
+                },
+                "computer": {
+                    "topic": "Binary to Decimal"
+                },
+                "english": {
+                    "topic": "Articles & Tenses"
+                }
+            }
+        },
+        {
+            "level": 2,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Quadratic Equations - Sum/Product of Roots"
+                },
+                "reasoning": {
+                    "topic": "Venn Diagrams"
+                },
+                "computer": {
+                    "topic": "Decimal to Binary"
+                },
+                "english": {
+                    "topic": "Subject-Verb Agreement"
+                }
+            }
+        },
+        {
+            "level": 3,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "A.P./G.P. Concepts"
+                },
+                "reasoning": {
+                    "topic": "Statement & Conclusion"
+                },
+                "computer": {
+                    "topic": "Bits & Bytes"
+                },
+                "english": {
+                    "topic": "Simple vs Compound Sentences"
+                }
+            }
+        },
+        {
+            "level": 4,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Sum of A.P./G.P."
+                },
+                "reasoning": {
+                    "topic": "Coding-Decoding I"
+                },
+                "computer": {
+                    "topic": "Hexadecimal System"
+                },
+                "english": {
+                    "topic": "Sentence Rearrangement"
+                }
+            }
+        },
+        {
+            "level": 5,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "H.P. and Harmonic Mean"
+                },
+                "reasoning": {
+                    "topic": "Coding-Decoding II"
+                },
+                "computer": {
+                    "topic": "ASCII Table"
+                },
+                "english": {
+                    "topic": "Spotting Errors"
+                }
+            }
+        },
+        {
+            "level": 6,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Determinants: Basics"
+                },
+                "reasoning": {
+                    "topic": "Direction Puzzles"
+                },
+                "computer": {
+                    "topic": "Memory Hierarchy"
+                },
+                "english": {
+                    "topic": "Tense Correction"
+                }
+            }
+        },
+        {
+            "level": 7,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Determinant Expansion"
+                },
+                "reasoning": {
+                    "topic": "Ranking Problems"
+                },
+                "computer": {
+                    "topic": "Storage Devices"
+                },
+                "english": {
+                    "topic": "Homonyms"
+                }
+            }
+        },
+        {
+            "level": 8,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Matrices: Add/Mult"
+                },
+                "reasoning": {
+                    "topic": "Puzzle Intro"
+                },
+                "computer": {
+                    "topic": "Number Systems"
+                },
+                "english": {
+                    "topic": "Vocabulary Synonyms"
+                }
+            }
+        },
+        {
+            "level": 9,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Matrix Inverse"
+                },
+                "reasoning": {
+                    "topic": "Seating Arrangement"
+                },
+                "computer": {
+                    "topic": "Logic Gates"
+                },
+                "english": {
+                    "topic": "Vocabulary Antonyms"
+                }
+            }
+        },
+        {
+            "level": 10,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Coordinate Geometry: Lines"
+                },
+                "reasoning": {
+                    "topic": "Clock Problems"
+                },
+                "computer": {
+                    "topic": "Truth Tables"
+                },
+                "english": {
+                    "topic": "Idioms & Phrases"
+                }
+            }
+        },
+        {
+            "level": 11,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Pair of Lines"
+                },
+                "reasoning": {
+                    "topic": "Calendar Problems"
+                },
+                "computer": {
+                    "topic": "Overflow & Underflow"
+                },
+                "english": {
+                    "topic": "Context Vocabulary"
+                }
+            }
+        },
+        {
+            "level": 12,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Tangents/Normals"
+                },
+                "reasoning": {
+                    "topic": "Puzzle II"
+                },
+                "computer": {
+                    "topic": "Floating Point Basics"
+                },
+                "english": {
+                    "topic": "Fill in the Blanks"
+                }
+            }
+        },
+        {
+            "level": 13,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Derivatives (Intro)"
+                },
+                "reasoning": {
+                    "topic": "Logical Deduction"
+                },
+                "computer": {
+                    "topic": "Data Representation"
+                },
+                "english": {
+                    "topic": "Comprehension I"
+                }
+            }
+        },
+        {
+            "level": 14,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Chain Rule"
+                },
+                "reasoning": {
+                    "topic": "Puzzle III"
+                },
+                "computer": {
+                    "topic": "File Systems"
+                },
+                "english": {
+                    "topic": "Comprehension II"
+                }
+            }
+        },
+        {
+            "level": 15,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Substitution Method"
+                },
+                "reasoning": {
+                    "topic": "Syllogism II"
+                },
+                "computer": {
+                    "topic": "Boolean Algebra Basics"
+                },
+                "english": {
+                    "topic": "Rearranging Sentences"
+                }
+            }
+        },
+        {
+            "level": 16,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Integration by Parts"
+                },
+                "reasoning": {
+                    "topic": "Statement Assumption"
+                },
+                "computer": {
+                    "topic": "Two\u2019s Complement"
+                },
+                "english": {
+                    "topic": "Advanced Verb Usage"
+                }
+            }
+        },
+        {
+            "level": 17,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Definite Integrals"
+                },
+                "reasoning": {
+                    "topic": "Statement Argument"
+                },
+                "computer": {
+                    "topic": "Instruction Cycle"
+                },
+                "english": {
+                    "topic": "One Word Substitution"
+                }
+            }
+        },
+        {
+            "level": 18,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Applications of Integrals"
+                },
+                "reasoning": {
+                    "topic": "Puzzle IV"
+                },
+                "computer": {
+                    "topic": "Boolean Operators"
+                },
+                "english": {
+                    "topic": "Word Power"
+                }
+            }
+        },
+        {
+            "level": 19,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Maxima/Minima Intro"
+                },
+                "reasoning": {
+                    "topic": "Ranking Puzzle II"
+                },
+                "computer": {
+                    "topic": "ROM Types"
+                },
+                "english": {
+                    "topic": "Error Detection"
+                }
+            }
+        },
+        {
+            "level": 20,
+            "stage": "Intermediate",
+            "sections": {
+                "math": {
+                    "topic": "Area Under Curve"
+                },
+                "reasoning": {
+                    "topic": "Data Sufficiency"
+                },
+                "computer": {
+                    "topic": "Memory Types"
+                },
+                "english": {
+                    "topic": "Grammar Drill"
+                }
+            }
+        }
+    ],
+    "advanced": [
+        {
+            "level": 1,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Conic: Circle Equation"
+                },
+                "reasoning": {
+                    "topic": "Matrix Puzzle"
+                },
+                "computer": {
+                    "topic": "Boolean Laws"
+                },
+                "english": {
+                    "topic": "Passage I"
+                }
+            }
+        },
+        {
+            "level": 2,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Circle: Tangents"
+                },
+                "reasoning": {
+                    "topic": "Linear Puzzle"
+                },
+                "computer": {
+                    "topic": "NAND/NOR Logic"
+                },
+                "english": {
+                    "topic": "Passage II"
+                }
+            }
+        },
+        {
+            "level": 3,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Circle: Locus"
+                },
+                "reasoning": {
+                    "topic": "Circular Puzzle"
+                },
+                "computer": {
+                    "topic": "Truth Table Design"
+                },
+                "english": {
+                    "topic": "Vocabulary I"
+                }
+            }
+        },
+        {
+            "level": 4,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Parabola: Properties"
+                },
+                "reasoning": {
+                    "topic": "Syllogism Complex"
+                },
+                "computer": {
+                    "topic": "Flip-Flop Basics"
+                },
+                "english": {
+                    "topic": "Vocabulary II"
+                }
+            }
+        },
+        {
+            "level": 5,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Parabola: Focus/Directrix"
+                },
+                "reasoning": {
+                    "topic": "Data Sufficiency I"
+                },
+                "computer": {
+                    "topic": "Instruction Set"
+                },
+                "english": {
+                    "topic": "Synonyms in Context"
+                }
+            }
+        },
+        {
+            "level": 6,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Ellipse: Geometry"
+                },
+                "reasoning": {
+                    "topic": "Logical Order"
+                },
+                "computer": {
+                    "topic": "ALU/CU Functions"
+                },
+                "english": {
+                    "topic": "Antonyms in Context"
+                }
+            }
+        },
+        {
+            "level": 7,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Ellipse: Axes"
+                },
+                "reasoning": {
+                    "topic": "Blood Relation Advanced"
+                },
+                "computer": {
+                    "topic": "Cache Memory"
+                },
+                "english": {
+                    "topic": "Comprehension Drill"
+                }
+            }
+        },
+        {
+            "level": 8,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Hyperbola: Basics"
+                },
+                "reasoning": {
+                    "topic": "Inference"
+                },
+                "computer": {
+                    "topic": "Boolean Expressions"
+                },
+                "english": {
+                    "topic": "Sentence Completion"
+                }
+            }
+        },
+        {
+            "level": 9,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Hyperbola: Properties"
+                },
+                "reasoning": {
+                    "topic": "Critical Reasoning"
+                },
+                "computer": {
+                    "topic": "Floating Point Deep"
+                },
+                "english": {
+                    "topic": "Phrasal Verbs"
+                }
+            }
+        },
+        {
+            "level": 10,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Maxima-Minima Rules"
+                },
+                "reasoning": {
+                    "topic": "Connections"
+                },
+                "computer": {
+                    "topic": "BIOS & Boot"
+                },
+                "english": {
+                    "topic": "Word Substitution"
+                }
+            }
+        },
+        {
+            "level": 11,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Maxima-Minima App"
+                },
+                "reasoning": {
+                    "topic": "Mixed Puzzle"
+                },
+                "computer": {
+                    "topic": "Binary Operations"
+                },
+                "english": {
+                    "topic": "Grammar Advanced"
+                }
+            }
+        },
+        {
+            "level": 12,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Complex Area"
+                },
+                "reasoning": {
+                    "topic": "Case Reasoning"
+                },
+                "computer": {
+                    "topic": "Pipeline Basics"
+                },
+                "english": {
+                    "topic": "Idioms II"
+                }
+            }
+        },
+        {
+            "level": 13,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Integration with Limits"
+                },
+                "reasoning": {
+                    "topic": "Syllogism Tricks"
+                },
+                "computer": {
+                    "topic": "Bus Architecture"
+                },
+                "english": {
+                    "topic": "Para Completion"
+                }
+            }
+        },
+        {
+            "level": 14,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Complex Substitution"
+                },
+                "reasoning": {
+                    "topic": "Multi-statement Deduction"
+                },
+                "computer": {
+                    "topic": "Compiler vs Interpreter"
+                },
+                "english": {
+                    "topic": "Sentence Framing"
+                }
+            }
+        },
+        {
+            "level": 15,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Integration: Reverse Limits"
+                },
+                "reasoning": {
+                    "topic": "Embedded Logic"
+                },
+                "computer": {
+                    "topic": "I/O Mapping"
+                },
+                "english": {
+                    "topic": "Cloze I"
+                }
+            }
+        },
+        {
+            "level": 16,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Area Between Curves"
+                },
+                "reasoning": {
+                    "topic": "Multipath Reasoning"
+                },
+                "computer": {
+                    "topic": "Logic Tables"
+                },
+                "english": {
+                    "topic": "Cloze II"
+                }
+            }
+        },
+        {
+            "level": 17,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Vector Addition"
+                },
+                "reasoning": {
+                    "topic": "Box Puzzle"
+                },
+                "computer": {
+                    "topic": "Instruction Format"
+                },
+                "english": {
+                    "topic": "Analogy Practice"
+                }
+            }
+        },
+        {
+            "level": 18,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Dot Product"
+                },
+                "reasoning": {
+                    "topic": "Matching Puzzles"
+                },
+                "computer": {
+                    "topic": "Addressing Modes"
+                },
+                "english": {
+                    "topic": "Formal Usage"
+                }
+            }
+        },
+        {
+            "level": 19,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Cross Product"
+                },
+                "reasoning": {
+                    "topic": "Passage Reasoning"
+                },
+                "computer": {
+                    "topic": "Truth Tables II"
+                },
+                "english": {
+                    "topic": "Critical Reading"
+                }
+            }
+        },
+        {
+            "level": 20,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Vector Apps"
+                },
+                "reasoning": {
+                    "topic": "Implicit Statement"
+                },
+                "computer": {
+                    "topic": "Memory Hierarchy II"
+                },
+                "english": {
+                    "topic": "Synonyms Game"
+                }
+            }
+        },
+        {
+            "level": 21,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Height & Distance"
+                },
+                "reasoning": {
+                    "topic": "Calendar Puzzle II"
+                },
+                "computer": {
+                    "topic": "Encoding Format"
+                },
+                "english": {
+                    "topic": "Antonyms Game"
+                }
+            }
+        },
+        {
+            "level": 22,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Trig Equations"
+                },
+                "reasoning": {
+                    "topic": "Case Puzzle"
+                },
+                "computer": {
+                    "topic": "Character Encoding"
+                },
+                "english": {
+                    "topic": "Para Jumble"
+                }
+            }
+        },
+        {
+            "level": 23,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Trig Graphs"
+                },
+                "reasoning": {
+                    "topic": "Numeric Logic"
+                },
+                "computer": {
+                    "topic": "Encoding Standards"
+                },
+                "english": {
+                    "topic": "Gap Fills"
+                }
+            }
+        },
+        {
+            "level": 24,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Inverse Trig"
+                },
+                "reasoning": {
+                    "topic": "Data Sufficiency II"
+                },
+                "computer": {
+                    "topic": "Data Buses"
+                },
+                "english": {
+                    "topic": "Vocab Match"
+                }
+            }
+        },
+        {
+            "level": 25,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Limits & Continuity Recap"
+                },
+                "reasoning": {
+                    "topic": "Reasoning Mix I"
+                },
+                "computer": {
+                    "topic": "Cache Optimization"
+                },
+                "english": {
+                    "topic": "Inference"
+                }
+            }
+        },
+        {
+            "level": 26,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "L'Hospital Rule"
+                },
+                "reasoning": {
+                    "topic": "Logic Constraints"
+                },
+                "computer": {
+                    "topic": "CU Logic"
+                },
+                "english": {
+                    "topic": "Word Link"
+                }
+            }
+        },
+        {
+            "level": 27,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Trig Apps"
+                },
+                "reasoning": {
+                    "topic": "Venn Logic"
+                },
+                "computer": {
+                    "topic": "Memory Mapping"
+                },
+                "english": {
+                    "topic": "Proofreading"
+                }
+            }
+        },
+        {
+            "level": 28,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Curve Sketching"
+                },
+                "reasoning": {
+                    "topic": "HO Logic"
+                },
+                "computer": {
+                    "topic": "Hardware Specs"
+                },
+                "english": {
+                    "topic": "Mock Reading"
+                }
+            }
+        },
+        {
+            "level": 29,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Mixed Integration"
+                },
+                "reasoning": {
+                    "topic": "Logic Summary"
+                },
+                "computer": {
+                    "topic": "Storage Control"
+                },
+                "english": {
+                    "topic": "One Word Uses"
+                }
+            }
+        },
+        {
+            "level": 30,
+            "stage": "Advanced",
+            "sections": {
+                "math": {
+                    "topic": "Advanced App Review"
+                },
+                "reasoning": {
+                    "topic": "Logic Final"
+                },
+                "computer": {
+                    "topic": "Concept Recap"
+                },
+                "english": {
+                    "topic": "Full Grammar Test"
+                }
+            }
+        }
+    ]
+}
