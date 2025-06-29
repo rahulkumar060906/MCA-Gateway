@@ -1,5 +1,5 @@
 import React from 'react';
-
+import banner from '../assets/nimcet-banner.png';
 export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12 text-gray-800 dark:text-gray-100">
@@ -26,7 +26,7 @@ export default function About() {
       {/* Banner */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-4 mb-10">
         <img
-          src="src\assets\nimcet-banner.png"
+          src={banner}
           alt="NIMCET Banner"
           className="w-full rounded-md object-cover"
         />
