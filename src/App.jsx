@@ -11,10 +11,12 @@ import About from './pages/About';
 import ContactPage from './pages/Contact';
 import NoticeBoard from './pages/Notice';
 import Dashboard from './pages/Dashboard';
-
+import LectureViewPage from './pages/LectureViewPage';
+import NotesPage from './pages/NotesPage';
+// import Test from './pages/Test';
 function App() {
   const location = useLocation();
-  const hideNavFooter = location.pathname === '/login';
+  const hideNavFooter = location.pathname === '/login' || location.pathname === '/signup' || location.pathname === '/test';
 
   return (
     <div className="app-container min-h-screen flex flex-col bg-white dark:bg-blue-950 transition-colors ">
@@ -29,6 +31,9 @@ function App() {
           <Route path="/levels" element={<Levels />} />
           <Route path="/study" element={<Study />} />
           <Route path="/login" element={<LoginSignup />} />
+          <Route path="/lecture" element={<LectureViewPage />} />
+          <Route path='/notes' element={<NotesPage />} />
+          {/* <Route path='/test' element={<Test />} /> */}
         </Routes>
       </main>
       {!hideNavFooter && <Footer />}
