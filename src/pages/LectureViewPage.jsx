@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
-
+import StudyLecturePlayer from '../components/StudyPage';
 const notesContent = `\
 ## Key Concepts\n\n- Topic 1: Introduction and overview.\n- Topic 2: Important formulas and examples.\n- Topic 3: Common mistakes to avoid.\n\n### Tips\n- Review the notes before attempting the quiz.\n- Pause the video to take notes.\n`;
 
@@ -30,7 +30,7 @@ export default function LectureViewPage() {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const videoLink = searchParams.get("video") || "https://www.youtube.com/embed/1O1Vn2y7tQw";
-
+    const videoId = videoLink.includes("embed/") ? videoLink.split("embed/")[1].split(/[?&]/)[0] : videoLink
     const handleOptionChange = (qIdx, optIdx) => {
         if (!submitted) {
             const updated = [...selected];
@@ -52,17 +52,18 @@ export default function LectureViewPage() {
     return (
         <div className="w-full px-0 py-10">
             {/* Top Section: Video + Notes */}
-            <div className="flex flex-col lg:flex-row gap-8 mb-10 ml-4 md:ml-8">
+            <div className="flex flex-col lg:flex-row gap-8 mb-10 ml-3 mr-3 md:ml-8">
                 {/* Video */}
-                <div className="w-full lg:w-[70%] aspect-video bg-black rounded-xl overflow-hidden shadow flex-shrink-0">
-                    <iframe
+                <div className="w-full lg:w-[70%]  bg-black rounded-xl overflow-hidden shadow flex-shrink-0">
+                    {/* <iframe
                         className="w-full h-full"
                         src={videoLink}
                         title="Lecture Video"
                         frameBorder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                         allowFullScreen
-                    ></iframe>
+                    ></iframe> */}
+                    <StudyLecturePlayer videoId={videoId} />
                 </div>
                 {/* Notes */}
                 <div className="w-full lg:w-[30%] bg-white dark:bg-gray-800 shadow rounded-xl p-6 overflow-y-auto max-h-[420px] mr-2 md:mr-4">
