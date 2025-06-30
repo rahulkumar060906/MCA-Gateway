@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function LevelCard({ level, levelIndex, unlocked, scores, selectedChapter, setSelectedChapter }) {
   const chapters = Object.entries(level.sections).map(([subject, data]) => ({
     title: data.topic,
@@ -36,72 +38,60 @@ function LevelCard({ level, levelIndex, unlocked, scores, selectedChapter, setSe
       </div>
       <div className="grid gap-6 grid-cols-2 grid-rows-2">
         {chapters.map((chapter, j) => {
-        const progress = Math.min(scores[`${levelIndex}-${chapter.title}`] || 0, 100);
-        return (
-          <div
-            key={j}
-            className="bg-white/10 dark:bg-white/10 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-2xl shadow-md mb-6 overflow-hidden"
-          >
+          const progress = Math.min(scores[`${levelIndex}-${chapter.title}`] || 0, 100);
+          return (
             <div
-              onClick={() =>
-                setSelectedChapter(
-                  selectedChapter?.title === chapter.title ? null : chapter
-                )
-              }
-              className="cursor-pointer"
+              key={j}
+              className="bg-white/10 dark:bg-white/10 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-2xl shadow-md mb-6 overflow-hidden"
             >
-              <img src={chapter.thumbnail} alt={chapter.title} className="w-full h-40 object-cover" />
-              <div className="px-4 py-3">
-                <h3 className="text-lg font-bold text-blue-700 dark:text-blue-400">
-                  {chapter.title} <span className="text-sm text-gray-500">({chapter.subject})</span>
-                </h3>
-                <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-2 mt-2">
-                  <div className="bg-blue-600 h-2 rounded-full transition-all" style={{ width: `${progress}%` }}></div>
+              <div
+                onClick={() =>
+                  setSelectedChapter(
+                    selectedChapter?.title === chapter.title ? null : chapter
+                  )
+                }
+                className="cursor-pointer"
+              >
+                <img src={chapter.thumbnail} alt={chapter.title} className="w-full h-40 object-cover" />
+                <div className="px-4 py-3">
+                  <h3 className="text-lg font-bold text-blue-700 dark:text-blue-400">
+                    {chapter.title} <span className="text-sm text-gray-500">({chapter.subject})</span>
+                  </h3>
+                  <div className="w-full bg-gray-300 dark:bg-gray-700 rounded-full h-2 mt-2">
+                    <div className="bg-blue-600 h-2 rounded-full transition-all" style={{ width: `${progress}%` }}></div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {selectedChapter?.title === chapter.title && (
-              <div className="px-4 pb-4">
-                <div className="mt-4 grid sm:grid-cols-2 gap-4">
-                  <div className="bg-white/10 dark:bg-white/10 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center shadow">
-                    <p className="font-bold text-blue-600 mb-2">📺 Video Lecture</p>
-                    <a
-                      href={chapter.resources.video}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-500 underline"
-                    >
-                      Watch
-                    </a>
+              {selectedChapter?.title === chapter.title && (
+                <div className="px-4 pb-4">
+                  <div className="mt-4 grid sm:grid-cols-2 gap-4">
+                    <div className="bg-white/10 dark:bg-white/10 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center shadow">
+                      <p className="font-bold text-blue-600 mb-2">📺 Video Lecture</p>
+                      <Link to={`/lecture?video=https://www.youtube.com/embed/Bw_fAGD9m-w?si=vQnsIzeNESIHfwnj`}>
+                        Watch
+                      </Link>
+
+                    </div>
+                    <div className="bg-white/10 dark:bg-white/10 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center shadow">
+                      <p className="font-bold text-blue-600 mb-2">📝 Notes</p>
+                      <Link to={`/notes?chapter=algebra`}>
+                      {/* <Link to={`/notes?chapter=${chapter?.title || "algebra"}`}> */}
+                        Download
+                      </Link>
+
+                    </div>
                   </div>
-                  <div className="bg-white/10 dark:bg-white/10 backdrop-blur-md border border-gray-200 dark:border-gray-700 rounded-xl p-4 text-center shadow">
-                    <p className="font-bold text-blue-600 mb-2">📝 Notes</p>
-                    <a
-                      href={chapter.resources.notes}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-500 underline"
-                    >
-                      Download
-                    </a>
+                  <div className="text-center mt-4">
+                    <Link to={`/test?chapter=algebra`} className="inline-block px-6 py-2 bg-blue-600 text-white rounded-xl font-semibold shadow-md hover:bg-blue-700 transition-colors">
+                      🧪 Take Test
+                    </Link>
                   </div>
                 </div>
-                <div className="text-center mt-4">
-                  <a
-                    href={chapter.resources.test}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-block bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold shadow hover:bg-blue-700"
-                  >
-                    🧪 Take Test
-                  </a>
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      })}
+              )}
+            </div>
+          );
+        })}
       </div>
       <div className="text-center mt-6">
         <button

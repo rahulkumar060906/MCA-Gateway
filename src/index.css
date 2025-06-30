@@ -3,3 +3,18 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+@media print {
+  .no-print, header, footer, nav {
+    display: none !important;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+
+  html {
+    -webkit-print-color-adjust: exact;
+  }
+}

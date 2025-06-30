@@ -46,8 +46,7 @@ export default function Dashboard() {
     return (
         <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Sidebar */}
-            <aside className="w-20 md:w-60 bg-purple-700 text-white p-4 flex flex-col gap-6">
-                <div className="text-2xl font-bold hidden md:block">MCA Gateway</div>
+            <aside className="w-20 hidden md:w-60 bg-gray-200 text-gray-800 dark:bg-blue-950 dark:text-white p-4 md:flex flex-col gap-6">
                 <nav className="flex flex-col items-center md:items-start gap-4 mt-4">
                     <a href="#" className="hover:opacity-80">📊 Overview</a>
                     <a href="#" className="hover:opacity-80">⚙️ Settings</a>

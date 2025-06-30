@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "question": "What is the value of x in the equation 2x + 3 = 7?",
+    "options": ["x = 1", "x = 2", "x = 3", "x = 4"],
+    "answer": 1,
+    "difficulty": "easy",
+    "topic": "linear equations",
+    "hint": "Subtract 3 from both sides and divide by 2."
+  },
+  {
+    "id": 2,
+    "question": "Which of the following is a quadratic equation?",
+    "options": [
+      "x + 2 = 4",
+      "2x - 3 = 0",
+      "x² + 3x - 4 = 0",
+      "x/3 = 5"
+    ],
+    "answer": 2,
+    "difficulty": "easy",
+    "topic": "quadratic equations",
+    "hint": "Quadratic equations have a term with x²."
+  },
+  {
+    "id": 3,
+    "question": "If x² - 5x + 6 = 0, what are the roots?",
+    "options": [
+      "x = 1 and 6",
+      "x = 2 and 3",
+      "x = 3 and 5",
+      "x = -2 and -3"
+    ],
+    "answer": 1,
+    "difficulty": "medium",
+    "topic": "factoring",
+    "hint": "Find two numbers that multiply to 6 and add up to -5."
+  },
+  {
+    "id": 4,
+    "question": "What is the discriminant of the quadratic equation x² + 4x + 4 = 0?",
+    "options": ["0", "4", "8", "16"],
+    "answer": 0,
+    "difficulty": "medium",
+    "topic": "quadratic formula",
+    "hint": "Discriminant is b² - 4ac."
+  },
+  {
+    "id": 5,
+    "question": "Which equation represents an identity?",
+    "options": [
+      "2x + 3 = 7",
+      "x² - 4 = 0",
+      "x + 0 = x",
+      "x² + x = 0"
+    ],
+    "answer": 2,
+    "difficulty": "hard",
+    "topic": "algebraic identities",
+    "hint": "An identity is true for all x."
+  }
+]

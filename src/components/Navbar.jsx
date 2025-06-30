@@ -1,12 +1,14 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaGraduationCap, FaHome, FaInfoCircle, FaEnvelope, FaBell } from 'react-icons/fa';
+import { HiMenu, HiX } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const [theme, setTheme] = useState('light');
-  const isLoggedIn = true;
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isLoggedIn = true; // replace with actual auth logic
+
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -15,22 +17,20 @@ const Navbar = () => {
     }
   }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
+  const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  const handleMenuToggle = () => setMenuOpen((prev) => !prev);
 
   return (
-    <nav className="w-full px-4 py-3 min-h-[10vh] bg-white dark:bg-blue-950 border-b-2 border-b-gray-200 dark:border-b-blue-900 shadow-md flex flex-col justify-around md:flex-row md:items-center md:justify-between">
-      {/* Logo */}
-      <div className="flex items-center justify-between md:justify-start gap-2">
-        <div className="flex items-center gap-2">
-          <FaGraduationCap className="text-2xl text-blue-600 dark:text-blue-400" />
-          <span className="text-xl font-bold text-gray-800 dark:text-white">MCA Gateway</span>
-        </div>
+    <nav className="w-full px-4 py-3 min-h-[10vh] bg-white dark:bg-blue-950 border-b-2 border-b-gray-200 dark:border-b-blue-900 shadow-md flex items-center justify-between no-print relative z-50">
+
+      {/* Left: Logo */}
+      <div className="flex items-center gap-2">
+        <FaGraduationCap className="text-2xl text-blue-600 dark:text-blue-400" />
+        <span className="text-xl font-bold text-gray-800 dark:text-white">MCA Gateway</span>
       </div>
 
-      {/* Navigation Links */}
-      <ul className="flex flex-col md:flex-row gap-4 md:gap-6 mt-4 md:mt-0 text-gray-700 dark:text-gray-200 items-center">
+      {/* Center: Navigation (desktop only) */}
+      <ul className="hidden md:flex gap-6 items-center text-gray-700 dark:text-gray-200">
         <li>
           <Link to="/" className="flex items-center gap-2 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
             <FaHome /> Home
@@ -52,20 +52,65 @@ const Navbar = () => {
           </Link>
         </li>
       </ul>
-      <div className='flex items-center gap-3 justify-between mt-4 md:mt-0'>
 
+      {/* Right: Buttons (desktop only) */}
+      <div className="hidden md:flex items-center gap-3">
         <Link
           to={isLoggedIn ? "/dashboard" : "/login"}
-          className="mt-4 md:mt-0 ml-0 md:ml-4 px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+          className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
         >
           {isLoggedIn ? "Dashboard" : "Login"}
         </Link>
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       </div>
+      <div className='md:hidden flex items-center gap-3'>
+        <Link
+          to={isLoggedIn ? "/dashboard" : "/login"}
+          className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+          onClick={() => setMenuOpen(false)}
+        >
+          {isLoggedIn ? "Dashboard" : "Login"}
+        </Link></div>
+      {/* Mobile: Hamburger icon */}
+      <button
+        className="md:hidden text-3xl text-blue-700 dark:text-blue-300 focus:outline-none"
+        onClick={handleMenuToggle}
+        aria-label="Toggle menu"
+      >
+        {menuOpen ? <HiX /> : <HiMenu />}
+      </button>
+
+      {/* Mobile: Full dropdown menu */}
+      {menuOpen && (
+        <ul className="absolute top-full left-0 right-0 bg-white dark:bg-blue-950 flex flex-col items-center gap-4 text-gray-700 dark:text-gray-200 py-4 shadow-md rounded-b-xl md:hidden z-40">
+          <li>
+            <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+              <FaHome /> Home
+            </Link>
+          </li>
+          <li>
+            <Link to="/notice" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+              <FaBell /> Notice
+            </Link>
+          </li>
+          <li>
+            <Link to="/about" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+              <FaInfoCircle /> About
+            </Link>
+          </li>
+          <li>
+            <Link to="/contact" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+              <FaEnvelope /> Contact
+            </Link>
+          </li>
+
+          <li>
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+          </li>
+        </ul>
+      )}
     </nav>
   );
 };
 
 export default Navbar;
-
-
