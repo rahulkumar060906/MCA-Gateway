@@ -1,10 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react';
 import YouTube from 'react-youtube';
-import { MdSettingsSuggest, MdVolumeUp, MdVolumeOff, MdFullscreen, MdFullscreenExit } from "react-icons/md";
+import {
+    MdSettingsSuggest, MdVolumeUp, MdVolumeOff,
+    MdFullscreen, MdFullscreenExit, MdPlayArrow, MdPause, MdNote
+} from 'react-icons/md';
+import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
+
 export default function StudyLecturePlayer({ videoId }) {
     const playerRef = useRef(null);
+    const fullscreenRef = useRef(null);
+
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(100);
+    const [lastVolume, setLastVolume] = useState(100);
     const [playbackRate, setPlaybackRate] = useState(1);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
@@ -15,11 +23,41 @@ export default function StudyLecturePlayer({ videoId }) {
     const [showAdvanced, setShowAdvanced] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [showNotes, setShowNotes] = useState(false);
+    const [notes, setNotes] = useState(localStorage.getItem(`notes-${videoId}`) || '');
+    const [quizEnabled, setQuizEnabled] = useState(true);
+    const [showQuiz, setShowQuiz] = useState(false);
+    const [currentQuestion, setCurrentQuestion] = useState(0);
+    const [triggeredQuizzes, setTriggeredQuizzes] = useState([]);
+    const [selectedOptions, setSelectedOptions] = useState({});
+    const [quizCompleted, setQuizCompleted] = useState(false);
+    const [analytics, setAnalytics] = useState(null);
+    const [showAnalytics, setShowAnalytics] = useState(false);
+
+    const quizTimestamps = [15, 45, 90];
+
+    const questions = [
+        {
+            q: 'What is the capital of India?',
+            options: ['Mumbai', 'Delhi', 'Kolkata', 'Chennai'],
+            answer: 1
+        },
+        {
+            q: 'What is 2 + 2?',
+            options: ['3', '4', '5', '6'],
+            answer: 1
+        },
+        {
+            q: 'React is a...',
+            options: ['Library', 'Framework', 'Database', 'Language'],
+            answer: 0
+        }
+    ];
+
+    const COLORS = ['#4ade80', '#facc15'];
 
     const onPlayerReady = (event) => {
         playerRef.current = event.target;
-
-        // Wait for the duration to actually become available
         const checkDuration = setInterval(() => {
             const d = event.target.getDuration();
             if (d > 0) {
@@ -27,6 +65,11 @@ export default function StudyLecturePlayer({ videoId }) {
                 clearInterval(checkDuration);
             }
         }, 200);
+
+        const savedProgress = localStorage.getItem(`progress-${videoId}`);
+        if (savedProgress) {
+            playerRef.current.seekTo(parseFloat(savedProgress));
+        }
     };
 
     const togglePlay = () => {
@@ -39,238 +82,318 @@ export default function StudyLecturePlayer({ videoId }) {
 
     const handleSeek = (e) => {
         const time = parseFloat(e.target.value);
-        if (playerRef.current) {
-            playerRef.current.seekTo(time, true);
-        }
+        if (playerRef.current) playerRef.current.seekTo(time, true);
         setCurrentTime(time);
     };
 
-    const addBookmark = () => {
-        if (!playerRef.current) return;
-        const time = playerRef.current.getCurrentTime();
-        setBookmarks([...bookmarks, time]);
-    };
     const handleSpeedChange = (e) => {
         const rate = parseFloat(e.target.value);
         setPlaybackRate(rate);
-        if (playerRef.current) {
-            playerRef.current.setPlaybackRate(rate);
-        }
+        if (playerRef.current) playerRef.current.setPlaybackRate(rate);
     };
+
     const handleVolumeChange = (e) => {
         const vol = parseInt(e.target.value);
         setVolume(vol);
-        if (playerRef.current) {
-            playerRef.current.setVolume(vol);
+        if (playerRef.current) playerRef.current.setVolume(vol);
+        setIsMuted(vol === 0);
+    };
+
+    const toggleMute = () => {
+        if (!playerRef.current) return;
+        const currentVol = playerRef.current.getVolume();
+        if (currentVol === 0) {
+            playerRef.current.setVolume(lastVolume);
+            setIsMuted(false);
+        } else {
+            setLastVolume(currentVol);
+            playerRef.current.setVolume(0);
+            setIsMuted(true);
         }
-    }
+    };
+
+    const toggleFullscreen = async () => {
+        const el = fullscreenRef.current;
+        if (!el) return;
+        if (document.fullscreenElement) {
+            await document.exitFullscreen();
+            setIsFullscreen(false);
+        } else {
+            await el.requestFullscreen();
+            setIsFullscreen(true);
+            if (screen.orientation?.lock) {
+                try {
+                    await screen.orientation.lock("landscape");
+                } catch { }
+            }
+        }
+    };
+
     const formatTime = (t) => {
         const min = String(Math.floor(t / 60)).padStart(2, '0');
         const sec = String(Math.floor(t % 60)).padStart(2, '0');
         return `${min}:${sec}`;
     };
-    const onStateChange = (event) => {
-        const state = event.data;
-        setIsPlaying(state === 1); // 1 is PLAYING
-    };
 
     useEffect(() => {
-        const volumeSync = setInterval(() => {
-            if (playerRef.current) {
-                const actualVolume = playerRef.current.getVolume();
-                setVolume(actualVolume);
-                setIsMuted(actualVolume === 0);
-            }
-        }, 500);
-
-        return () => clearInterval(volumeSync);
-    }, []);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
+        const sync = setInterval(() => {
             if (playerRef.current) {
                 const ct = playerRef.current.getCurrentTime();
                 setCurrentTime(ct);
-                if (
-                    isLooping &&
-                    loopStart !== null &&
-                    loopEnd !== null &&
-                    ct >= loopEnd
-                ) {
+                localStorage.setItem(`progress-${videoId}`, ct);
+
+                const rounded = Math.floor(ct);
+                if (quizEnabled && quizTimestamps.includes(rounded) && !triggeredQuizzes.includes(rounded)) {
+                    setTriggeredQuizzes(prev => [...prev, rounded]);
+                    setShowQuiz(true);
+                    playerRef.current.pauseVideo();
+                }
+
+                if (isLooping && loopStart !== null && loopEnd !== null && ct >= loopEnd) {
                     playerRef.current.seekTo(loopStart);
                 }
             }
         }, 500);
-        return () => clearInterval(interval);
-    }, [loopStart, loopEnd, isLooping]);
+        return () => clearInterval(sync);
+    }, [loopStart, loopEnd, isLooping, quizEnabled, triggeredQuizzes]);
+
+    useEffect(() => {
+        const keyHandler = (e) => {
+            if (e.key.toLowerCase() === 'm') toggleMute();
+            if (e.key.toLowerCase() === 'f') toggleFullscreen();
+        };
+        window.addEventListener('keydown', keyHandler);
+        return () => window.removeEventListener('keydown', keyHandler);
+    }, [lastVolume]);
+
+    useEffect(() => {
+        localStorage.setItem(`notes-${videoId}`, notes);
+    }, [notes]);
 
     const percentage = duration ? Math.floor((currentTime / duration) * 100) : 0;
 
-    useEffect(() => {
-        const handleKeyDown = (e) => {
-            const player = playerRef.current;
-            if (!player) return;
+    const handleOptionChange = (e) => {
+        setSelectedOptions({
+            ...selectedOptions,
+            [currentQuestion]: parseInt(e.target.value)
+        });
+    };
 
-            switch (e.key.toLowerCase()) {
-                case 'm': // Mute/Unmute
-                    const currentVol = player.getVolume();
-                    player.setVolume(currentVol === 0 ? volume : 0);
-                    break;
-                case 'f': // Fullscreen toggle
-                    const container = player.getIframe()?.parentElement;
-                    if (document.fullscreenElement) {
-                        document.exitFullscreen();
-                    } else if (container?.requestFullscreen) {
-                        container.requestFullscreen();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        };
+    const handleAnswer = () => {
+        if (currentQuestion < questions.length - 1) {
+            setCurrentQuestion(q => q + 1);
+        } else {
+            setShowQuiz(false);
+            setCurrentQuestion(0);
+            setQuizCompleted(true);
+            playerRef.current?.pauseVideo();
 
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [volume]);
+            const correct = questions.filter((q, idx) => q.answer === selectedOptions[idx]).length;
+            const attempted = Object.keys(selectedOptions).length;
+
+            setAnalytics([
+                { name: 'Correct', value: correct },
+                { name: 'Attempted', value: attempted - correct }
+            ]);
+        }
+    };
 
     return (
-        <div className="relative w-full aspect-video rounded overflow-hidden">
-            <div className="absolute inset-0 w-full h-full">
-                <YouTube
-                    videoId={videoId}
-                    className="w-full h-full"
-                    onReady={onPlayerReady}
-                    onStateChange={onStateChange}
-                    opts={{
-                        width: '100%',
-                        height: '100%',
-                        playerVars: {
-                            controls: 0,
-                            modestbranding: 1,
-                            rel: 0,
-                        },
-                    }}
-                />
-            </div>
-            <div className="absolute top-2 right-4 bg-purple-600 text-white px-2 py-1 text-xs rounded-full font-semibold">
-                {percentage}% watched
-            </div>
-            {/* Controls Overlay */}
-            <div className="absolute inset-0 flex flex-col justify-end pointer-events-none z-10">
-                <div className="bg-blue-100/60 p-4  pointer-events-auto  rounded-t-xl">
+        <div className="flex w-full h-full">
+            {/* Video/Quiz/Controls container */}
+            <div ref={fullscreenRef} className={`relative aspect-video rounded overflow-hidden bg-black flex-1 transition-all duration-300 ${showNotes ? 'sm:w-2/3 w-full' : 'w-full'}`}>
+                {/* Video player container, always fills parent */}
+                <div className="relative w-full h-full">
+                    <YouTube
+                        videoId={videoId}
+                        className="w-full h-full"
+                        onReady={onPlayerReady}
+                        opts={{
+                            width: "100%",
+                            height: "100%",
+                            playerVars: { controls: 0, modestbranding: 1, rel: 0 }
+                        }}
+                    />
+                </div>
 
-                    {/* Timeline */}
-                    <div>
+                <div className="absolute top-2 right-2 bg-purple-600 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                    {percentage}% watched
+                </div>
+
+                <div className="absolute bottom-0 left-0 right-0 z-10 bg-violet-100/90">
+                    <input
+                        type="range"
+                        min={0}
+                        max={duration || 1}
+                        value={currentTime || 0}
+                        step={0.1}
+                        onChange={handleSeek}
+                        className="w-full accent-blue-700"
+                    />
+                    <div className="flex flex-wrap items-center justify-between gap-2 p-2 text-xs sm:text-sm">
+                        <button onClick={togglePlay} className="text-xl">
+                            {isPlaying ? <MdPause /> : <MdPlayArrow />}
+                        </button>
+                        <span className="font-mono text-violet-700">
+                            {formatTime(currentTime)} / {formatTime(duration)}
+                        </span>
+                        <button onClick={toggleMute} className="text-xl">
+                            {isMuted ? <MdVolumeOff /> : <MdVolumeUp />}
+                        </button>
                         <input
                             type="range"
                             min={0}
-                            max={duration}
-                            value={currentTime}
-                            step={0.1}
-                            onChange={handleSeek}
-                            className="w-full accent-blue-800"
+                            max={100}
+                            value={volume ?? 100}
+                            onChange={handleVolumeChange}
+                            className="w-20 sm:w-32"
                         />
-
-                    </div>
-
-                    {/* Group A: Playback, Volume, Speed */}
-                    <div className="flex flex-wrap items-center justify-between gap-4">
-                        <button onClick={togglePlay} className="bg-purple-600 px-4 py-1 rounded text-sm">
-                            {isPlaying ? 'Pause' : 'Play'}
-                        </button>
-                        <div className="flex justify-between text-xs text-violet-700 mt-1 px-1 font-mono">
-                            <span>{formatTime(currentTime)}</span>/
-                            <span>{formatTime(duration)}</span>
-                        </div>
-                        <div>
-                            <button
-                                onClick={() => {
-                                    if (!playerRef.current) return;
-                                    const currentVol = playerRef.current.getVolume();
-                                    const muted = currentVol === 0;
-                                    setIsMuted(!muted);
-                                    playerRef.current.setVolume(muted ? volume : 0);
-                                }}
-                                className="hover:text-red-400 text-2xl"
-                            >
-                                {isMuted ? <MdVolumeOff /> : <MdVolumeUp />}
-                            </button>
-                            <input
-                                type="range"
-                                min={0}
-                                max={100}
-                                value={volume}
-                                onChange={handleVolumeChange}
-                                className="w-32"
-                            />
-                        </div>
                         <select
                             value={playbackRate}
                             onChange={handleSpeedChange}
-                            className="bg-gray-800 text-white text-sm rounded px-2 py-1"
+                            className="bg-gray-800 text-white rounded px-2 py-1"
                         >
-                            {[0.5, 1, 1.25, 1.5, 2].map((rate) => (
+                            {[0.5, 1, 1.25, 1.5, 2].map(rate => (
                                 <option key={rate} value={rate}>{rate}x</option>
                             ))}
                         </select>
 
-
-                        <button onClick={() => setShowAdvanced(p => !p)} className="hover:text-blue-400">
-                            <MdSettingsSuggest className='text-3xl' />
+                        <button onClick={() => setShowNotes(p => !p)} className="text-xl">
+                            <MdNote />
                         </button>
-                        <button
-                            onClick={() => {
-                                const container = playerRef.current?.getIframe()?.parentElement;
-                                if (document.fullscreenElement) {
-                                    document.exitFullscreen();
-                                    setIsFullscreen(false);
-                                } else if (container?.requestFullscreen) {
-                                    container.requestFullscreen();
-                                    setIsFullscreen(true);
-                                }
-                            }}
-                            className="hover:text-yellow-400 text-2xl"
-                        >
+                        <label className="text-xs flex items-center gap-1">
+                            <input type="checkbox" checked={quizEnabled} onChange={() => setQuizEnabled(p => !p)} /> Enable Quiz
+                        </label>
+                        <details>
+                            <summary className="cursor-pointer text-sm text-violet-700 hover:text-violet-900">Advanced</summary>
+                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-white bg-black/80 p-2 rounded">
+                                <button onClick={() => setLoopStart(currentTime)} className="bg-blue-600 px-2 py-1 rounded">
+                                    ⏱ Start: {loopStart ? formatTime(loopStart) : '--:--'}
+                                </button>
+                                <button onClick={() => setLoopEnd(currentTime)} className="bg-blue-600 px-2 py-1 rounded">
+                                    ⏱ End: {loopEnd ? formatTime(loopEnd) : '--:--'}
+                                </button>
+                                <button
+                                    onClick={() => setIsLooping(!isLooping)}
+                                    className={`px-2 py-1 rounded ${isLooping ? 'bg-green-600' : 'bg-gray-600'}`}
+                                >
+                                    {isLooping ? 'Looping On' : 'Looping Off'}
+                                </button>
+                                {bookmarks.map((time, idx) => (
+                                    <button
+                                        key={idx}
+                                        onClick={() => playerRef.current?.seekTo(time)}
+                                        className="bg-yellow-500 text-black px-2 py-1 rounded"
+                                    >
+                                        ⭐ {formatTime(time)}
+                                    </button>
+                                ))}
+                            </div>
+                        </details>
+                        <button onClick={toggleFullscreen} className="text-xl">
                             {isFullscreen ? <MdFullscreenExit /> : <MdFullscreen />}
                         </button>
                     </div>
                 </div>
 
-                {/* Advanced Controls Dropdown */}
+                {showQuiz && (
+                    <div className="absolute inset-0 bg-black/80 text-white flex flex-col justify-center items-center z-30 p-4">
+                        <div className="bg-white text-black w-full max-w-md p-4 rounded shadow-lg">
+                            <h2 className="text-lg font-bold mb-2">Quiz Question</h2>
+                            <p className="mb-4">{questions[currentQuestion].q}</p>
+                            <div className="space-y-2 mb-4">
+                                {questions[currentQuestion].options.map((opt, i) => (
+                                    <label key={i} className="block my-1">
+                                        <input
+                                            type="radio"
+                                            name={`question-${currentQuestion}`}
+                                            value={i}
+                                            checked={selectedOptions[currentQuestion] === i}
+                                            onChange={handleOptionChange}
+                                            className="mr-2"
+                                        />
+                                        {opt}
+                                    </label>
+                                ))}
 
-
-                {showAdvanced && (
-                    <div className="absolute right-0 mb-15 w-max  backdrop-blur-md rounded shadow-lg z-20 flex flex-col items-center pointer-events-auto gap-2 px-4 py-2">
-                        <button onClick={() => setLoopStart(currentTime)} className="bg-blue-600 px-3 py-1 rounded">
-                            ⏱ Start: {loopStart ? formatTime(loopStart) : '--:--'}
-                        </button>
-                        <button onClick={() => setLoopEnd(currentTime)} className="bg-blue-600 px-3 py-1 rounded">
-                            ⏱ End: {loopEnd ? formatTime(loopEnd) : '--:--'}
-                        </button>
-                        <button
-                            onClick={() => setIsLooping(!isLooping)}
-                            className={`px-3 py-1 rounded ${isLooping ? 'bg-green-600' : 'bg-gray-600'}`}
-                        >
-                            {isLooping ? 'Looping On' : 'Looping Off'}
-                        </button>
-                        <button onClick={addBookmark} className="bg-yellow-500 text-black px-3 py-1 rounded">
-                            ⭐ Add Bookmark
-                        </button>
-                        <div className="flex flex-wrap gap-2 ml-2">
-                            {bookmarks.map((time, idx) => (
+                            </div>
+                            <div className="flex justify-between">
                                 <button
-                                    key={idx}
-                                    onClick={() => playerRef.current && playerRef.current.seekTo(time)}
-                                    className="bg-gray-700 px-2 py-1 rounded hover:bg-gray-600 text-xs"
+                                    onClick={() => {
+                                        setCompletedQuizzes(prev => [...prev, Math.floor(currentTime)]);
+                                        setShowQuiz(false);
+                                        resetQuiz();
+                                        playerRef.current?.playVideo();
+                                    }}
+                                    className="bg-gray-400 px-4 py-2 rounded"
                                 >
-                                    🔖 {formatTime(time)}
+                                    Skip Quiz
                                 </button>
-                            ))}
+
+                                <button onClick={
+                                    () => {
+                                        handleAnswer();
+                                        { currentQuestion < questions.length - 1 ? null : resetQuiz() }
+                                    }} className="bg-blue-600 text-white px-4 py-2 rounded">
+                                    {currentQuestion < questions.length - 1 ? 'Next' : 'Submit'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
+
+                {quizCompleted && analytics && (
+                    <div className="w-full mt-4 bg-white rounded shadow p-4">
+                        <h3 className="text-lg font-bold mb-2">Quiz Analytics</h3>
+                        <ResponsiveContainer width="100%" height={300}>
+                            <PieChart>
+                                <Pie data={analytics} dataKey="value" nameKey="name" outerRadius={100} label>
+                                    {analytics.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip />
+                                <Legend />
+                            </PieChart>
+                        </ResponsiveContainer>
+                        <button
+                            onClick={() => setShowAnalytics(false)}
+                            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
+                        >
+                            Close
+                        </button>
+                    </div>
+                )}
+
+                {!quizCompleted && (
+                    <button
+                        onClick={() => setShowAnalytics(true)}
+                        className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
+                    >
+                        Show Analytics
+                    </button>
+                )}
             </div>
+            {/* Notes panel, outside video container */}
+            {showNotes && (
+                <div className="relative w-1/3 h-full bg-white z-20 p-4 shadow-lg overflow-auto transition-all duration-300 flex flex-col">
+                    <div className="flex justify-between items-center mb-2">
+                        <h2 className="text-lg font-semibold">📝 Your Notes</h2>
+                        <button
+                            onClick={() => setShowNotes(false)}
+                            className="text-sm px-2 py-1 bg-red-500 text-white rounded"
+                        >
+                            Close
+                        </button>
+                    </div>
+                    <textarea
+                        className="w-full flex-1 border border-gray-300 p-2 rounded text-sm resize-none"
+                        value={notes}
+                        onChange={(e) => setNotes(e.target.value)}
+                        placeholder="Write your notes here..."
+                    />
+                </div>
+            )}
         </div>
     );
-
 }

@@ -36,7 +36,7 @@ function LevelCard({ level, levelIndex, unlocked, scores, selectedChapter, setSe
         <h2 className="text-2xl font-extrabold text-blue-700 dark:text-blue-400  ">Level {level.level}</h2>
         <p className="text-sm text-gray-600 dark:text-gray-300 italic">Stage: {level.stage}</p>
       </div>
-      <div className="grid gap-6 grid-cols-2 grid-rows-2">
+      <div className="grid gap-6 grid-cols-1 grid-rows-1 sm:grid-cols-2 sm:grid-rows-2">
         {chapters.map((chapter, j) => {
           const progress = Math.min(scores[`${levelIndex}-${chapter.title}`] || 0, 100);
           return (

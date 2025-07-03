@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
+import LoginSuccess from './pages/LoginSuccess';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Footer from './components/Footer';
-import PageContainer from './components/PageContainer';
-import LoginSignup from './pages/LoginSignup';
 import Study from './pages/Study';
 import Levels from './pages/Levels';
 import About from './pages/About';
@@ -25,15 +24,15 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path='/dashboard' element={<Dashboard/>} />
+          <Route path='/dashboard' element={<Dashboard />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/notice" element={<NoticeBoard />} />
           <Route path="/levels" element={<Levels />} />
           <Route path="/study" element={<Study />} />
-          <Route path="/login" element={<LoginSignup />} />
           <Route path="/lecture" element={<LectureViewPage />} />
           <Route path='/notes' element={<NotesPage />} />
           {/* <Route path='/test' element={<Test />} /> */}
+          <Route path="/login/success" element={<LoginSuccess />} />
         </Routes>
       </main>
       {!hideNavFooter && <Footer />}

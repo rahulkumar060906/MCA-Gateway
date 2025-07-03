@@ -3,12 +3,12 @@ import { FaGraduationCap, FaHome, FaInfoCircle, FaEnvelope, FaBell } from 'react
 import { HiMenu, HiX } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
-
+import LoginSignup from '../pages/LoginSignup';
 const Navbar = () => {
   const [theme, setTheme] = useState('light');
   const [menuOpen, setMenuOpen] = useState(false);
-  const isLoggedIn = true; // replace with actual auth logic
-
+  const isLoggedIn = false; // replace with actual auth logic
+  const [showLoginModal, setShowLoginModal] = useState(false);
   useEffect(() => {
     if (theme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -55,22 +55,53 @@ const Navbar = () => {
 
       {/* Right: Buttons (desktop only) */}
       <div className="hidden md:flex items-center gap-3">
-        <Link
-          to={isLoggedIn ? "/dashboard" : "/login"}
-          className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
-        >
-          {isLoggedIn ? "Dashboard" : "Login"}
-        </Link>
+        {isLoggedIn ? (
+          <Link
+            to="/dashboard"
+            className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+            onClick={() => setMenuOpen(false)}
+          >
+            Dashboard
+          </Link>
+        ) : (
+          <button
+            onClick={() => {
+              setMenuOpen(false);
+              setShowLoginModal(true);
+            }}
+            className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+          >
+            Login
+          </button>
+        )}
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
       </div>
-      <div className='md:hidden flex items-center gap-3'>
-        <Link
-          to={isLoggedIn ? "/dashboard" : "/login"}
-          className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
-          onClick={() => setMenuOpen(false)}
-        >
-          {isLoggedIn ? "Dashboard" : "Login"}
-        </Link></div>
+      <div className="md:hidden flex items-center gap-3">
+        {isLoggedIn ? (
+          <Link
+            to="/dashboard"
+            className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+            onClick={() => setMenuOpen(false)}
+          >
+            Dashboard
+          </Link>
+        ) : (
+          <button
+            onClick={() => {
+              setMenuOpen(false);
+              setShowLoginModal(true);
+            }}
+            className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+          >
+            Login
+          </button>
+        )}
+      </div>
+
+      {/* LoginSignup Modal */}
+      {!isLoggedIn && showLoginModal && (
+        <LoginSignup onClose={() => setShowLoginModal(false)} />
+      )}
       {/* Mobile: Hamburger icon */}
       <button
         className="md:hidden text-3xl text-blue-700 dark:text-blue-300 focus:outline-none"
