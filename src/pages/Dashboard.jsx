@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getUserData } from '../utils/api';
 import ProgressCard from '../components/ProgressCard';
 import ActivityFeed from '../components/ActivityFeed';
 import LevelTracker from '../components/LevelTracker';
@@ -10,18 +11,18 @@ import {
     Tooltip,
     ResponsiveContainer,
     CartesianGrid,
-    
+
 } from 'recharts';
 
-const mockStats = {
-    xp: 1200,
-    level: 5,
-    nextLevelXP: 1500,
-    completedChapters: 18,
-    totalChapters: 25,
-    streak: 7,
-    name: 'Arka Maulana',
-    location: 'Surakarta, INA',
+const defaultStats = {
+    xp: 0,
+    level: 1,
+    nextLevelXP: 100,
+    completedChapters: 0,
+    totalChapters: 0,
+    streak: 0,
+    name: 'User',
+    location: '',
     avatar: 'https://i.pravatar.cc/100',
 };
 
@@ -43,6 +44,34 @@ const mockChartData = [
 const dailyTip = "Break big problems into small ones — consistency beats intensity.";
 
 export default function Dashboard() {
+    const [stats, setStats] = useState(defaultStats);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        async function fetchUserData() {
+            try {
+                const user = await getUserData();
+                setStats((prev) => ({
+                    ...prev,
+                    name: user.fullName || user.userName || 'User',
+                    userName: user.userName || '',
+                    location: user.location || '',
+                    avatar: user.avatar || 'https://i.pravatar.cc/100',
+                    // Add more fields as your backend provides
+                }));
+            } catch (err) {
+                setStats(defaultStats);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchUserData();
+    }, []);
+
+    if (loading) {
+        return <div className="flex items-center justify-center min-h-screen text-xl">Loading...</div>;
+    }
+
     return (
         <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900">
             {/* Sidebar */}
@@ -57,19 +86,21 @@ export default function Dashboard() {
 
             {/* Main Content */}
             <main className="flex-1 p-6 md:p-8">
-                <header className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Hello, Arka 👋</h1>
-                    <p className="text-gray-600 dark:text-gray-300">
-                        Nice to have you back. What an exciting day! Get ready and continue your lesson today.
-                    </p>
+                <header className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Hello, {stats.name} 👋</h1>
+                        <p className="text-gray-600 dark:text-gray-300">
+                            Nice to have you back. What an exciting day! Get ready and continue your lesson today.
+                        </p>
+                    </div>
                 </header>
 
                 <section className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                    <ProgressCard completed={mockStats.completedChapters} total={mockStats.totalChapters} streak={mockStats.streak} />
-                    <LevelTracker level={mockStats.level} xp={mockStats.xp} nextLevelXP={mockStats.nextLevelXP} />
+                    <ProgressCard completed={stats.completedChapters} total={stats.totalChapters} streak={stats.streak} />
+                    <LevelTracker level={stats.level} xp={stats.xp} nextLevelXP={stats.nextLevelXP} />
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow text-center md:col-span-1 animate-pulse">
                         <div className="text-purple-600 dark:text-purple-300 font-bold text-2xl mb-2 animate-glow">
-                            <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">{mockStats.xp} XP</span>
+                            <span className="bg-gradient-to-r from-purple-400 to-pink-500 bg-clip-text text-transparent">{stats.xp} XP</span>
                         </div>
                         <div className="flex justify-center gap-4">
                             <button className="bg-yellow-500 text-white px-3 py-1 rounded shadow">Redeem</button>
@@ -77,9 +108,12 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow flex flex-col items-center text-center">
-                        <img src={mockStats.avatar} alt="avatar" className="rounded-full w-16 h-16 mb-2" />
-                        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">{mockStats.name}</h2>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">{mockStats.location}</p>
+                        <img src={stats.avatar} alt="avatar" className="rounded-full w-16 h-16 mb-2" />
+                        <h2 className="text-lg font-semibold text-gray-800 dark:text-white">{stats.name}</h2>
+                        {stats.userName && (
+                          <p className="text-sm text-blue-600 dark:text-blue-400 font-mono">@{stats.userName}</p>
+                        )}
+                        <p className="text-sm text-gray-500 dark:text-gray-400">{stats.location}</p>
                         <div className="mt-4 text-sm italic text-blue-600 dark:text-blue-400">"{dailyTip}"</div>
                     </div>
                 </section>

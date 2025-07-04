@@ -1,4 +1,29 @@
+const express = require('express');
+const router = express.Router();
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
+const User = require('../models/User');
+require('dotenv').config();
+
+const authenticateJWT = require('../middleware/auth');
 // POST /api/auth/reset-password
+// Example of a protected route: get user data
+router.get('/user-data', authenticateJWT, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.userId).select('-password');
+        if (!user) return res.status(404).json({ message: 'User not found' });
+        res.json(user);
+    } catch (err) {
+        res.status(500).json({ message: 'Server error', error: err.message });
+    }
+});
+
+// Example of a protected route: save test data (dummy implementation)
+router.post('/save-test', authenticateJWT, async (req, res) => {
+    // You can implement saving test data logic here
+    res.json({ success: true, message: 'Test data saved (demo)' });
+});
 router.post('/reset-password', [
     body('email').isEmail().withMessage('Valid email is required')
 ], async (req, res) => {
@@ -19,13 +44,6 @@ router.post('/reset-password', [
         res.status(500).json({ message: 'Server error', error: err.message });
     }
 });
-const express = require('express');
-const router = express.Router();
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { body, validationResult } = require('express-validator');
-const User = require('../models/User');
-require('dotenv').config();
 
 // POST /api/auth/signup
 router.post('/signup', [
@@ -56,7 +74,17 @@ router.post('/signup', [
         const hashedPassword = await bcrypt.hash(password, 10);
         const user = new User({ fullName, userName, phone, email, password: hashedPassword });
         await user.save();
-        res.status(201).json({ message: 'User registered successfully' });
+        // Generate JWT
+        const token = jwt.sign(
+            { userId: user._id, userName: user.userName },
+            process.env.JWT_SECRET,
+            { expiresIn: '7d' }
+        );
+        res.status(201).json({
+            message: 'User registered successfully',
+            token,
+            user: { fullName: user.fullName, userName: user.userName, email: user.email, phone: user.phone }
+        });
     } catch (err) {
         if (err.code === 11000) {
             return res.status(409).json({ message: 'Duplicate field value' });

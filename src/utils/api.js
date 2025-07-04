@@ -1,29 +1,35 @@
+import api from './axiosInstance';
+
 // Reset password API
 export async function resetPassword(email) {
-    const res = await fetch(`${API_BASE}/auth/reset-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-    });
-    return res.json();
+    const res = await api.post('/auth/reset-password', { email });
+    return res.data;
 }
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-
 export async function signupUser(data) {
-    const res = await fetch(`${API_BASE}/auth/signup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
-    return res.json();
+    const res = await api.post('/auth/signup', data);
+    if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+    }
+    return res.data;
 }
 
 export async function loginUser(data) {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-    });
-    return res.json();
+    const res = await api.post('/auth/login', data);
+    if (res.data.token) {
+        localStorage.setItem('token', res.data.token);
+    }
+    return res.data;
+}
+
+// Get user data (protected)
+export async function getUserData() {
+    const res = await api.get('/auth/user-data');
+    return res.data;
+}
+
+// Save test data (protected)
+export async function saveTestData(testData) {
+    const res = await api.post('/auth/save-test', testData);
+    return res.data;
 }

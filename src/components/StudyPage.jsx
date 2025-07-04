@@ -5,7 +5,7 @@ import {
     MdFullscreen, MdFullscreenExit, MdPlayArrow, MdPause, MdNote
 } from 'react-icons/md';
 import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
-
+import QuizCard from './QuizCard';
 export default function StudyLecturePlayer({ videoId }) {
     const playerRef = useRef(null);
     const fullscreenRef = useRef(null);
@@ -297,81 +297,12 @@ export default function StudyLecturePlayer({ videoId }) {
                 </div>
 
                 {showQuiz && (
-                    <div className="absolute inset-0 bg-black/80 text-white flex flex-col justify-center items-center z-30 p-4">
-                        <div className="bg-white text-black w-full max-w-md p-4 rounded shadow-lg">
-                            <h2 className="text-lg font-bold mb-2">Quiz Question</h2>
-                            <p className="mb-4">{questions[currentQuestion].q}</p>
-                            <div className="space-y-2 mb-4">
-                                {questions[currentQuestion].options.map((opt, i) => (
-                                    <label key={i} className="block my-1">
-                                        <input
-                                            type="radio"
-                                            name={`question-${currentQuestion}`}
-                                            value={i}
-                                            checked={selectedOptions[currentQuestion] === i}
-                                            onChange={handleOptionChange}
-                                            className="mr-2"
-                                        />
-                                        {opt}
-                                    </label>
-                                ))}
-
-                            </div>
-                            <div className="flex justify-between">
-                                <button
-                                    onClick={() => {
-                                        setCompletedQuizzes(prev => [...prev, Math.floor(currentTime)]);
-                                        setShowQuiz(false);
-                                        resetQuiz();
-                                        playerRef.current?.playVideo();
-                                    }}
-                                    className="bg-gray-400 px-4 py-2 rounded"
-                                >
-                                    Skip Quiz
-                                </button>
-
-                                <button onClick={
-                                    () => {
-                                        handleAnswer();
-                                        { currentQuestion < questions.length - 1 ? null : resetQuiz() }
-                                    }} className="bg-blue-600 text-white px-4 py-2 rounded">
-                                    {currentQuestion < questions.length - 1 ? 'Next' : 'Submit'}
-                                </button>
-                            </div>
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30">
+                        <div className="bg-white p-4 rounded shadow-lg">
+                            <h2 className="text-lg font-semibold mb-2">Quiz</h2>
+                            <QuizCard />
                         </div>
                     </div>
-                )}
-
-                {quizCompleted && analytics && (
-                    <div className="w-full mt-4 bg-white rounded shadow p-4">
-                        <h3 className="text-lg font-bold mb-2">Quiz Analytics</h3>
-                        <ResponsiveContainer width="100%" height={300}>
-                            <PieChart>
-                                <Pie data={analytics} dataKey="value" nameKey="name" outerRadius={100} label>
-                                    {analytics.map((entry, index) => (
-                                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                    ))}
-                                </Pie>
-                                <Tooltip />
-                                <Legend />
-                            </PieChart>
-                        </ResponsiveContainer>
-                        <button
-                            onClick={() => setShowAnalytics(false)}
-                            className="mt-2 px-4 py-2 bg-blue-500 text-white rounded"
-                        >
-                            Close
-                        </button>
-                    </div>
-                )}
-
-                {!quizCompleted && (
-                    <button
-                        onClick={() => setShowAnalytics(true)}
-                        className="mt-4 px-4 py-2 bg-green-500 text-white rounded"
-                    >
-                        Show Analytics
-                    </button>
                 )}
             </div>
             {/* Notes panel, outside video container */}

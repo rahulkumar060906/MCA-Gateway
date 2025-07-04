@@ -7,7 +7,29 @@ import LoginSignup from '../pages/LoginSignup';
 const Navbar = () => {
   const [theme, setTheme] = useState('light');
   const [menuOpen, setMenuOpen] = useState(false);
-  const isLoggedIn = false; // replace with actual auth logic
+  // Auth logic: check if JWT token exists in localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
+
+  useEffect(() => {
+    const handleStorage = () => {
+      setIsLoggedIn(!!localStorage.getItem('token'));
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
+
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const handleLogout = () => {
+    setShowLogoutDialog(true);
+  };
+  const confirmLogout = () => {
+    localStorage.removeItem('token');
+    setShowLogoutDialog(false);
+    window.location.reload();
+  };
+  const cancelLogout = () => {
+    setShowLogoutDialog(false);
+  };
   const [showLoginModal, setShowLoginModal] = useState(false);
   useEffect(() => {
     if (theme === 'dark') {
@@ -54,15 +76,23 @@ const Navbar = () => {
       </ul>
 
       {/* Right: Buttons (desktop only) */}
-      <div className="hidden md:flex items-center gap-3">
+      <div className="hidden md:flex items-center gap-3 relative">
         {isLoggedIn ? (
-          <Link
-            to="/dashboard"
-            className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
-            onClick={() => setMenuOpen(false)}
-          >
-            Dashboard
-          </Link>
+          <>
+            <Link
+              to="/dashboard"
+              className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              Dashboard
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-700 transition-colors"
+            >
+              Logout
+            </button>
+          </>
         ) : (
           <button
             onClick={() => {
@@ -75,16 +105,68 @@ const Navbar = () => {
           </button>
         )}
         <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+        {/* Logout Confirmation Dialog (Desktop) */}
+        {showLogoutDialog && (
+          <div className="fixed inset-0 flex items-center justify-center " style={{ backdropFilter: 'blur(2px)', background: 'rgba(0,0,0,0.25)' }}>
+            <div className="bg-white dark:bg-blue-950 p-6 rounded-xl shadow-lg max-w-xs w-full flex flex-col items-center">
+              <div className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Are you sure you want to logout?</div>
+              <div className="flex gap-4">
+                <button
+                  onClick={confirmLogout}
+                  className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-700 transition-colors"
+                >
+                  Yes, Logout
+                </button>
+                <button
+                  onClick={cancelLogout}
+                  className="px-4 py-2 rounded bg-gray-300 text-gray-800 font-semibold hover:bg-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <div className="md:hidden flex items-center gap-3">
         {isLoggedIn ? (
-          <Link
-            to="/dashboard"
-            className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
-            onClick={() => setMenuOpen(false)}
-          >
-            Dashboard
-          </Link>
+          <>
+            <Link
+              to="/dashboard"
+              className="px-4 py-2 rounded bg-blue-500 text-white font-semibold hover:bg-blue-700 dark:bg-blue-800 dark:hover:bg-blue-900 transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              Dashboard
+            </Link>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-700 transition-colors"
+            >
+              Logout
+            </button>
+            {/* Logout Confirmation Dialog (Mobile) */}
+            {showLogoutDialog && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+                <div className="bg-white dark:bg-blue-950 p-6 rounded-xl shadow-lg max-w-xs w-full flex flex-col items-center">
+                  <div className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">Are you sure you want to logout?</div>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={confirmLogout}
+                      className="px-4 py-2 rounded bg-red-500 text-white font-semibold hover:bg-red-700 transition-colors"
+                    >
+                      Yes, Logout
+                    </button>
+                    <button
+                      onClick={cancelLogout}
+                      className="px-4 py-2 rounded bg-gray-300 text-gray-800 font-semibold hover:bg-gray-400 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <button
             onClick={() => {
