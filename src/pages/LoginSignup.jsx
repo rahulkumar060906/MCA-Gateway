@@ -103,7 +103,7 @@ const LoginSignup = ({ onClose }) => {
   const handleGoogleLogin = async () => {
     setGoogleLoading(true);
     try {
-      window.location.href = `${import.meta.env.VITE_API_URl}/auth/google`;
+      window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
     } catch (error) {
       setError('Google login failed.');
     } finally {
