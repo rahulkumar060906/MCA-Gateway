@@ -1,5 +1,6 @@
 import React from 'react';
 import banner from '../assets/nimcet-banner.png';
+import MathsAnalysis from '../components/MathsAnalysis';
 export default function About() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-12 text-gray-800 dark:text-gray-100">
@@ -173,7 +174,11 @@ export default function About() {
           <li>NIT Warangal</li>
         </ul>
       </div>
-
+      {/* Maths Analysis */}
+      <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-10">
+        <h2 className="text-2xl font-bold text-purple-600 mb-4">📊 Maths Analysis</h2>
+        <MathsAnalysis />
+      </div>
       {/* Preparation Resources */}
       <div className="bg-white dark:bg-gray-800 shadow rounded-xl p-6 mb-10">
         <h2 className="text-2xl font-bold text-purple-600 mb-4">📚 Preparation Resources</h2>

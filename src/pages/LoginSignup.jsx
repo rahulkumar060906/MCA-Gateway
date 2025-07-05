@@ -96,6 +96,7 @@ const LoginSignup = ({ onClose }) => {
       }
     } catch (err) {
       setError('Something went wrong.');
+      console.error(err);
     }
     setLoading(false);
   };

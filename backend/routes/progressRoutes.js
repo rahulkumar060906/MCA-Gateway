@@ -16,43 +16,50 @@ function auth(req, res, next) {
     }
 }
 
-// Get user profile
-router.get('/profile', auth, async (req, res) => {
-    const user = await User.findById(req.user.userId).select('-password');
+// Get user progress
+router.get('/progress', auth, async (req, res) => {
+    const user = await User.findById(req.user.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    res.json(user);
+    res.json({
+        testHistory: user.testHistory,
+        recentLevel: user.recentLevel,
+        recentVideo: user.recentVideo
+    });
 });
 
-// Update user profile (fullName, phone, email)
-router.put('/profile', auth, [
-    body('fullName').optional().notEmpty(),
-    body('phone').optional().notEmpty(),
-    body('email').optional().isEmail()
+// Add a test attempt
+router.post('/test-history', auth, [
+    body('testId').notEmpty(),
+    body('sectionScores').isObject(),
+    body('totalScore').isNumeric()
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
     const user = await User.findById(req.user.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    if (req.body.fullName) user.fullName = req.body.fullName;
-    if (req.body.phone) user.phone = req.body.phone;
-    if (req.body.email) user.email = req.body.email;
+    user.testHistory.push({
+        testId: req.body.testId,
+        sectionScores: req.body.sectionScores,
+        totalScore: req.body.totalScore
+    });
     await user.save();
-    res.json({ success: true, user });
+    res.json({ success: true });
 });
 
-// Change password
-router.put('/change-password', auth, [
-    body('oldPassword').notEmpty(),
-    body('newPassword').isLength({ min: 6 })
-], async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+// Update recent level
+router.post('/recent-level', auth, [body('recentLevel').notEmpty()], async (req, res) => {
     const user = await User.findById(req.user.userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    const bcrypt = require('bcryptjs');
-    const isMatch = await bcrypt.compare(req.body.oldPassword, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Old password is incorrect' });
-    user.password = await bcrypt.hash(req.body.newPassword, 10);
+    user.recentLevel = req.body.recentLevel;
+    await user.save();
+    res.json({ success: true });
+});
+
+// Update recent video
+router.post('/recent-video', auth, [body('recentVideo').notEmpty()], async (req, res) => {
+    const user = await User.findById(req.user.userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    user.recentVideo = req.body.recentVideo;
     await user.save();
     res.json({ success: true });
 });

@@ -1,4 +1,3 @@
-
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -7,10 +6,32 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
 dotenv.config();
-
 const app = express();
-app.use(cors());
+
+app.use(cors({
+    origin: ['http://localhost:5173', `${process.env.VITE_API_URL}/api`],
+    credentials: true
+}));
 app.use(express.json());
+const leaderboardRoutes = require('./routes/leaderboardRoutes');
+app.use('/api/leaderboard', leaderboardRoutes);
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/user', userRoutes);
+// Admin user management routes
+const adminUserRoutes = require('./routes/adminUserRoutes');
+app.use('/api/admin', adminUserRoutes);
+// Admin test management routes
+const adminTestRoutes = require('./routes/adminTestRoutes');
+app.use('/api/admin', adminTestRoutes);
+// Admin leaderboard analytics routes
+const adminLeaderboardRoutes = require('./routes/adminLeaderboardRoutes');
+app.use('/api/admin', adminLeaderboardRoutes);
+// Admin feedback management routes
+const adminFeedbackRoutes = require('./routes/adminFeedbackRoutes');
+app.use('/api/admin', adminFeedbackRoutes);
+// Admin settings management routes
+const adminSettingsRoutes = require('./routes/adminSettingsRoutes');
+app.use('/api/admin', adminSettingsRoutes);
 
 // Set security HTTP headers
 app.use(helmet());
@@ -36,14 +57,13 @@ const passport = require('passport');
 require('./utils/passportGoogle');
 app.use(passport.initialize());
 
-// Routes
 
 // Apply rate limiter only to login route
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth/login', loginLimiter, authRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/auth', require('./routes/googleAuth'));
-app.use('/api/auth', require('./routes/googleAuth'));
+app.use('/api/progress', require('./routes/progressRoutes'));
 
 // Post-login logic: protected route example
 const authenticateJWT = (req, res, next) => {

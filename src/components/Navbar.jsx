@@ -5,7 +5,19 @@ import { Link } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import LoginSignup from '../pages/LoginSignup';
 const Navbar = () => {
-  const [theme, setTheme] = useState('light');
+  // Initialize theme from localStorage or system preference
+  const getInitialTheme = () => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('theme');
+      if (stored === 'dark' || stored === 'light') return stored;
+      // Optionally, use system preference as fallback
+      if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+      }
+    }
+    return 'light';
+  };
+  const [theme, setTheme] = useState(getInitialTheme);
   const [menuOpen, setMenuOpen] = useState(false);
   // Auth logic: check if JWT token exists in localStorage
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
@@ -37,6 +49,7 @@ const Navbar = () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+    localStorage.setItem('theme', theme);
   }, [theme]);
 
   const toggleTheme = () => setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
