@@ -20,7 +20,7 @@ router.get('/google/callback', passport.authenticate('google', { session: false,
     { expiresIn: '7d' }
   );
   // Redirect to frontend with token and user info as query params
-  const frontendUrl = 'http://localhost:5173/login/success';
+  const frontendUrl = `${process.env.FRONTEND_URL}/login/success` || 'http://localhost:5173/login/success';
   const params = new URLSearchParams({
     token,
     fullName: user.fullName || '',
