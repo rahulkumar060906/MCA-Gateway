@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../App';
 
 const LoginSuccess = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { login } = useAuth();
 
     useEffect(() => {
         const params = new URLSearchParams(location.search);
@@ -17,11 +19,12 @@ const LoginSuccess = () => {
         if (token) {
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user));
+            login(user, token); // <-- update context immediately
             navigate('/dashboard');
         } else {
             navigate('/');
         }
-    }, [location, navigate]);
+    }, [location, navigate, login]);
 
     return (
         <div className="flex items-center justify-center min-h-screen">
