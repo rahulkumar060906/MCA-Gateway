@@ -19,7 +19,7 @@ const LoginSuccess = () => {
             localStorage.setItem('user', JSON.stringify(user));
             navigate('/dashboard');
         } else {
-            navigate('/login');
+            navigate('/');
         }
     }, [location, navigate]);
 
