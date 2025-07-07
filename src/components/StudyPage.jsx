@@ -199,7 +199,7 @@ export default function StudyLecturePlayer({ videoId }) {
     };
 
     return (
-        <div className="flex w-full h-full">
+        <div className="flex max-w-full max-h-full">
             {/* Video/Quiz/Controls container */}
             <div ref={fullscreenRef} className={`relative aspect-video rounded overflow-hidden bg-black flex-1 transition-all duration-300 ${showNotes ? 'sm:w-2/3 w-full' : 'w-full'}`}>
                 {/* Video player container, always fills parent */}

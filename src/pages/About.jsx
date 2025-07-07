@@ -3,7 +3,7 @@ import banner from '../assets/nimcet-banner.png';
 import MathsAnalysis from '../components/MathsAnalysis';
 export default function About() {
   return (
-    <div className="max-w-4xl mx-auto px-6 py-12 text-gray-800 dark:text-gray-100">
+    <div className="max-w-full md:max-w-4xl mx-auto px-6 py-12 text-gray-800 dark:text-gray-100">
       {/* Platform Info */}
       <div className="mb-16">
         <h2 className="text-2xl font-semibold mb-4 text-blue-600 dark:text-blue-400">About MCA Gateway</h2>

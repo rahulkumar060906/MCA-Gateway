@@ -22,6 +22,7 @@ import TestManagement from './admin/pages/TestManagement';
 import LeaderboardAnalytics from './admin/pages/LeaderboardAnalytics';
 import FeedbackPage from './admin/pages/FeedbackPage';
 import AdminSettings from './admin/pages/AdminSettings';
+import TodoWidget from './components/Todo';
 
 // AuthContext for global authentication state
 const AuthContext = React.createContext();
@@ -75,7 +76,9 @@ function App() {
   const location = useLocation();
   const hideNavFooter =
     location.pathname === '/test';
+  
 
+  
   return (
     <AuthProvider>
       <div className="app-container min-h-screen flex flex-col bg-white dark:bg-blue-950 transition-colors ">
@@ -163,6 +166,12 @@ function App() {
             </Route>
           </Routes>
         </main>
+        {!hideNavFooter && (
+          <>
+            
+            <TodoWidget />
+          </>
+        )}
         {!hideNavFooter && <Footer />}
       </div>
     </AuthProvider>

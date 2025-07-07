@@ -36,6 +36,8 @@ const Navbar = () => {
   };
   const confirmLogout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setIsLoggedIn(false);
     setShowLogoutDialog(false);
     window.location.reload();
   };

@@ -36,42 +36,48 @@ const analysisData = {
 };
 
 export default function NimcetMathTable() {
-
     return (
-        <div className={`overflow-x-auto p-4 min-h-screen transition-colors duration-300 dark:bg-gray-900 bg-white`}>
+        <div className="w-full px-4 py-6 min-h-screen transition-colors duration-300 dark:bg-gray-900 bg-white">
+            <h2 className="text-xl font-bold mb-4 text-center text-gray-800 dark:text-white">
+                NIMCET Math Topic-Wise Analysis
+            </h2>
 
-            <table className={`table-auto border w-full text-sm text-left transition-colors duration-300
-        dark:border-gray-700 border-gray-300 text-gray-700 dark:text-gray-300`}
-            >
-                <thead className={ 'dark:bg-gray-800 dark:text-gray-100 bg-blue-100 text-gray-900'}>
-                    <tr>
-                        {analysisData.headers.map((header, index) => (
-                            <th
-                                key={index}
-                                className={`border px-3 py-2 text-xs font-semibold text-center transition-colors duration-300
-  dark:bg-gray-800 dark:text-gray-100 text-gray-700`}
-                            >
-                                {header}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {analysisData.rows.map((row, idx) => (
-                        <tr key={idx} className='dark:hover:bg-gray-700  hover:bg-gray-100'>
-                            {row.map((cell, i) => (
-                                <td
-                                    key={i}
-                                    className={`border px-2 py-1 text-center transition-colors duration-300
-                   border-gray-700 dark:border-gray-300`}
-                                >
-                                    {cell}
-                                </td>
+            <div className="relative overflow-x-auto rounded-lg border dark:border-gray-700 border-gray-300">
+                <div className="min-w-[1000px]">
+                    <table className="w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                        <thead className="bg-blue-100 text-gray-900 dark:bg-gray-800 dark:text-gray-100">
+                            <tr>
+                                {analysisData.headers.map((header, index) => (
+                                    <th
+                                        key={index}
+                                        className="border px-3 py-2 text-xs font-semibold text-center whitespace-nowrap dark:border-gray-600 border-gray-300"
+                                    >
+                                        {header}
+                                    </th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {analysisData.rows.map((row, idx) => (
+                                <tr key={idx} className="hover:bg-gray-100 dark:hover:bg-gray-700">
+                                    {row.map((cell, i) => (
+                                        <td
+                                            key={i}
+                                            className="border px-2 py-1 text-center dark:border-gray-600 border-gray-300"
+                                        >
+                                            {cell}
+                                        </td>
+                                    ))}
+                                </tr>
                             ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <p className="text-xs mt-2 text-gray-500 dark:text-gray-400 text-center">
+                Swipe left/right to view full table on mobile ⬅️➡️
+            </p>
         </div>
     );
 }
