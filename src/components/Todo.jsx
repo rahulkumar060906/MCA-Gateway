@@ -1,174 +1,158 @@
-import React, { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { FiPlus, FiX } from 'react-icons/fi';
-import { MdOutlineChecklist } from 'react-icons/md';
-import Settings from './Settings';
+import React, { useState, useEffect } from "react";
+import { FaPlus, FaTimes, FaBell, } from "react-icons/fa";
+import { FaRepeat } from "react-icons/fa6";
+import { motion, AnimatePresence } from "framer-motion";
 
-const initialTasks = JSON.parse(localStorage.getItem('tasks')) || [];
+const getStoredTasks = () =>
+  JSON.parse(localStorage.getItem("todo_tasks")) || [];
 
-const TodoWidget = () => {
-  const [notificationsEnabled, setNotificationsEnabled] = useState(
-    localStorage.getItem('notify') === 'true'
-  );
-  const [tasks, setTasks] = useState(initialTasks);
-  const [newTask, setNewTask] = useState('');
-  const [dueDate, setDueDate] = useState('');
-  const [sortBy, setSortBy] = useState('date');
-  const [open, setOpen] = useState(false);
+export default function TodoWidget() {
+  const [tasks, setTasks] = useState(getStoredTasks);
+  const [input, setInput] = useState("");
+  const [showWidget, setShowWidget] = useState(false);
+  const [enableNotifications, setEnableNotifications] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem("todo_tasks", JSON.stringify(tasks));
   }, [tasks]);
-  // Ask permission once
+
+  const handleAddTask = () => {
+    if (!input.trim()) return;
+    const newTask = {
+      id: Date.now(),
+      text: input,
+      done: false,
+      date: new Date().toISOString(),
+      recurring: false,
+    };
+    setTasks([...tasks, newTask]);
+    setInput("");
+    if (enableNotifications && Notification.permission === "granted") {
+      new Notification("📝 New Task Added", { body: input });
+    }
+  };
+
+  const handleToggleTask = (id) => {
+    setTasks(
+      tasks.map((t) =>
+        t.id === id ? { ...t, done: !t.done } : t
+      )
+    );
+  };
+
+  const handleDeleteTask = (id) => {
+    setTasks(tasks.filter((t) => t.id !== id));
+  };
+
+  const handleToggleRecurring = (id) => {
+    setTasks(
+      tasks.map((t) =>
+        t.id === id ? { ...t, recurring: !t.recurring } : t
+      )
+    );
+  };
+
+  const aiSuggestedTasks = ["Review notes", "Practice coding", "Take a 10-min walk"];
+
   useEffect(() => {
-    if (notificationsEnabled && Notification.permission !== 'granted') {
+    if ("Notification" in window && Notification.permission !== "granted") {
       Notification.requestPermission();
     }
-  }, [notificationsEnabled]);
-  const handleAdd = () => {
-    if (!newTask) return;
-    const task = {
-      id: Date.now().toString(),
-      text: newTask,
-      done: false,
-      dueDate,
-    };
-    setTasks((prev) => [...prev, task]);
-    setNewTask('');
-    setDueDate('');
-
-    if (notificationsEnabled && dueDate) {
-      const timeLeft = new Date(dueDate).getTime() - Date.now();
-      if (timeLeft > 0) {
-        setTimeout(() => {
-          new Notification('⏰ Task Due!', { body: task.text });
-        }, timeLeft);
-      }
-    }
-  };
-
-  const handleDragEnd = (result) => {
-    if (!result.destination) return;
-    const reordered = [...tasks];
-    const [moved] = reordered.splice(result.source.index, 1);
-    reordered.splice(result.destination.index, 0, moved);
-    setTasks(reordered);
-  };
-
-  const toggleDone = (id) =>
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
-
-  const removeTask = (id) => setTasks((prev) => prev.filter((t) => t.id !== id));
-
-  const sortedTasks = [...tasks].sort((a, b) => {
-    if (sortBy === 'status') return a.done - b.done;
-    return new Date(a.dueDate || 0) - new Date(b.dueDate || 0);
-  });
+  }, []);
 
   return (
     <>
-      {/* Floating Toggle Button */}
       <button
-        onClick={() => setOpen(!open)}
-        className="fixed bottom-6 left-6 z-50 bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 focus:outline-none"
+        className="fixed z-50 bottom-5 left-5 p-3 rounded-full bg-purple-600 text-white shadow-lg hover:bg-purple-700"
+        onClick={() => setShowWidget(!showWidget)}
       >
-        {open ? <FiX size={20} /> : <MdOutlineChecklist size={22} />}
+        {showWidget ? <FaTimes /> : <FaPlus />}
       </button>
 
-      {/* Widget */}
-      {open && (
-        <div className="fixed bottom-20 left-6 z-40 w-full max-w-sm">
-          <div className="backdrop-blur-[15px] bg-[rgba(255,255,255,0.4)] dark:bg-[rgba(30,30,30,0.5)] border border-white/30 dark:border-white/20 rounded-2xl shadow-xl p-4">
-            <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold text-blue-600 dark:text-purple-400 mb-3">📝 My To-Do List</h2>
-              <Settings setNotificationsEnabled={setNotificationsEnabled} />
-            </div>
-            {/* Add Task */}
-            <div className="flex flex-col gap-2 mb-4">
+      <AnimatePresence>
+        {showWidget && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 50 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            className="fixed z-40 bottom-20 left-5 w-[90vw] sm:w-96 bg-white/30 dark:bg-white/10 backdrop-blur-md rounded-xl shadow-2xl p-4 text-gray-900 dark:text-white"
+          >
+            <h2 className="text-lg font-bold mb-2">📑 To-Do</h2>
+            <div className="flex gap-2 mb-4">
               <input
-                type="text"
-                placeholder="New task..."
-                className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white/60 dark:bg-gray-800/60 text-gray-900 dark:text-white placeholder:text-gray-400"
-                value={newTask}
-                onChange={(e) => setNewTask(e.target.value)}
-              />
-              <input
-                type="datetime-local"
-                className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white/60 dark:bg-gray-800/60 text-gray-900 dark:text-white"
-                value={dueDate}
-                onChange={(e) => setDueDate(e.target.value)}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Enter task..."
+                className="flex-1 px-3 py-2 rounded-lg bg-white/50 dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none"
               />
               <button
-                onClick={handleAdd}
-                className="bg-purple-600 hover:bg-purple-700 text-white py-2 rounded font-semibold"
+                className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg"
+                onClick={handleAddTask}
               >
-                Add Task
+                Add
               </button>
             </div>
 
-            {/* Sort By */}
-            <div className="flex justify-between items-center text-sm mb-2">
-              <span className="text-gray-700 dark:text-gray-300">Sort by:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="border rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200"
-              >
-                <option value="date">Due Date</option>
-                <option value="status">Status</option>
-              </select>
+            {tasks.length > 0 ? (
+              <ul className="space-y-2 max-h-60 overflow-y-auto">
+                {tasks.map((task) => (
+                  <li
+                    key={task.id}
+                    className={`flex items-center justify-between bg-white/60 dark:bg-gray-700 px-3 py-2 rounded-lg ${
+                      task.done ? "line-through opacity-60" : ""
+                    }`}
+                  >
+                    <span
+                      className="flex-1 cursor-pointer"
+                      onClick={() => handleToggleTask(task.id)}
+                    >
+                      {task.text}
+                    </span>
+                    <div className="flex items-center gap-2 ml-3">
+                      <FaRepeat
+                        className={`cursor-pointer ${
+                          task.recurring ? "text-green-500" : "text-gray-400"
+                        }`}
+                        onClick={() => handleToggleRecurring(task.id)}
+                      />
+                      <FaTimes
+                        className="text-red-500 cursor-pointer"
+                        onClick={() => handleDeleteTask(task.id)}
+                      />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-gray-600 dark:text-gray-300">No tasks yet</p>
+            )}
+
+            {/* AI Suggestions */}
+            <div className="mt-4">
+              <p className="text-sm text-purple-600 dark:text-purple-300 mb-1">AI Suggestions:</p>
+              <ul className="text-sm list-disc list-inside">
+                {aiSuggestedTasks.map((t, i) => (
+                  <li key={i}>{t}</li>
+                ))}
+              </ul>
             </div>
 
-            {/* Task List */}
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="tasks">
-                {(provided) => (
-                  <ul
-                    {...provided.droppableProps}
-                    ref={provided.innerRef}
-                    className="max-h-64 overflow-y-auto space-y-2 pr-1"
-                  >
-                    {sortedTasks.map((task, i) => (
-                      <Draggable draggableId={task.id} index={i} key={task.id}>
-                        {(prov) => (
-                          <li
-                            ref={prov.innerRef}
-                            {...prov.draggableProps}
-                            {...prov.dragHandleProps}
-                            className="flex justify-between items-start gap-2 bg-white/60 dark:bg-gray-800/60 border border-gray-300 dark:border-gray-700 p-3 rounded-lg"
-                          >
-                            <label className="flex items-start gap-2 text-gray-800 dark:text-gray-200">
-                              <input
-                                type="checkbox"
-                                checked={task.done}
-                                onChange={() => toggleDone(task.id)}
-                              />
-                              <span className={`${task.done ? 'line-through text-gray-400' : ''}`}>
-                                {task.text}
-                              </span>
-                            </label>
-                            <div className="text-right text-xs text-gray-500 dark:text-gray-400">
-                              {task.dueDate && (
-                                <div>{new Date(task.dueDate).toLocaleString()}</div>
-                              )}
-                              <button onClick={() => removeTask(task.id)} className="text-red-500 mt-1 text-sm">
-                                ❌
-                              </button>
-                            </div>
-                          </li>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </ul>
-                )}
-              </Droppable>
-            </DragDropContext>
-          </div>
-        </div>
-      )}
+            {/* Settings */}
+            <div className="mt-4 text-sm">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={enableNotifications}
+                  onChange={() => setEnableNotifications(!enableNotifications)}
+                  className="accent-purple-600"
+                />
+                Enable Notifications
+              </label>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
-};
-
-export default TodoWidget;
+}

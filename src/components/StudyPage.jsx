@@ -4,8 +4,8 @@ import {
     MdSettingsSuggest, MdVolumeUp, MdVolumeOff,
     MdFullscreen, MdFullscreenExit, MdPlayArrow, MdPause, MdNote
 } from 'react-icons/md';
-import { PieChart, Pie, Cell, Legend, Tooltip, ResponsiveContainer } from 'recharts';
 import QuizCard from './QuizCard';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 export default function StudyLecturePlayer({ videoId }) {
     const playerRef = useRef(null);
     const fullscreenRef = useRef(null);
@@ -20,41 +20,31 @@ export default function StudyLecturePlayer({ videoId }) {
     const [loopEnd, setLoopEnd] = useState(null);
     const [isLooping, setIsLooping] = useState(false);
     const [bookmarks, setBookmarks] = useState([]);
-    const [showAdvanced, setShowAdvanced] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [showNotes, setShowNotes] = useState(false);
     const [notes, setNotes] = useState(localStorage.getItem(`notes-${videoId}`) || '');
     const [quizEnabled, setQuizEnabled] = useState(true);
     const [showQuiz, setShowQuiz] = useState(false);
-    const [currentQuestion, setCurrentQuestion] = useState(0);
     const [triggeredQuizzes, setTriggeredQuizzes] = useState([]);
-    const [selectedOptions, setSelectedOptions] = useState({});
+    const [quizStarted, setQuizStarted] = useState(false);
     const [quizCompleted, setQuizCompleted] = useState(false);
     const [analytics, setAnalytics] = useState(null);
-    const [showAnalytics, setShowAnalytics] = useState(false);
-
     const quizTimestamps = [15, 45, 90];
-
-    const questions = [
+    const quizData = [
         {
-            q: 'What is the capital of India?',
-            options: ['Mumbai', 'Delhi', 'Kolkata', 'Chennai'],
-            answer: 1
+            question: 'What is the value of \\( \\int x^2 \\, dx \\)?',
+            options: ['\\( \\frac{x^3}{3} + C \\)', '\\( x^3 + C \\)', '\\( \\frac{x^2}{2} + C \\)', '\\( \\frac{x^4}{4} + C \\)'],
+            answer: [0],
+            explanation: 'The integral of \\( x^n \\) is \\( \\frac{x^{n+1}}{n+1} + C \\).'
         },
         {
-            q: 'What is 2 + 2?',
-            options: ['3', '4', '5', '6'],
-            answer: 1
-        },
-        {
-            q: 'React is a...',
-            options: ['Library', 'Framework', 'Database', 'Language'],
-            answer: 0
+            question: 'What is the value of \\( \\sin 30^\\circ \\)?',
+            options: ['\\( \\frac{1}{2} \\)', '\\( \\frac{\\sqrt{3}}{2} \\)', '1', '0'],
+            answer: [0],
+            explanation: 'The sine of \\( 30^\\circ \\) is \\( \\frac{1}{2} \\).'
         }
     ];
-
-    const COLORS = ['#4ade80', '#facc15'];
 
     const onPlayerReady = (event) => {
         playerRef.current = event.target;
@@ -172,37 +162,18 @@ export default function StudyLecturePlayer({ videoId }) {
 
     const percentage = duration ? Math.floor((currentTime / duration) * 100) : 0;
 
-    const handleOptionChange = (e) => {
-        setSelectedOptions({
-            ...selectedOptions,
-            [currentQuestion]: parseInt(e.target.value)
-        });
-    };
-
-    const handleAnswer = () => {
-        if (currentQuestion < questions.length - 1) {
-            setCurrentQuestion(q => q + 1);
-        } else {
-            setShowQuiz(false);
-            setCurrentQuestion(0);
-            setQuizCompleted(true);
-            playerRef.current?.pauseVideo();
-
-            const correct = questions.filter((q, idx) => q.answer === selectedOptions[idx]).length;
-            const attempted = Object.keys(selectedOptions).length;
-
-            setAnalytics([
-                { name: 'Correct', value: correct },
-                { name: 'Attempted', value: attempted - correct }
-            ]);
-        }
-    };
-
     return (
-        <div className="flex max-w-full max-h-full">
-            {/* Video/Quiz/Controls container */}
-            <div ref={fullscreenRef} className={`relative aspect-video rounded overflow-hidden bg-black flex-1 transition-all duration-300 ${showNotes ? 'sm:w-2/3 w-full' : 'w-full'}`}>
-                {/* Video player container, always fills parent */}
+        <div className="flex flex-col sm:flex-row w-full max-h-screen px-4 py-3 gap-4 dark:bg-gray-900 text-gray-900 dark:text-white">
+            {/* Video Container */}
+            <div
+                ref={fullscreenRef}
+                className={`relative aspect-video w-full sm:flex-1 mx-auto rounded overflow-hidden bg-black transition-all duration-300 ${showNotes ? 'sm:w-2/3' : 'w-full'
+                    }`}
+                style={{
+                    maxHeight: '80vh',
+                    maxWidth: '80vw',
+                }}
+            >
                 <div className="relative w-full h-full">
                     <YouTube
                         videoId={videoId}
@@ -220,7 +191,7 @@ export default function StudyLecturePlayer({ videoId }) {
                     {percentage}% watched
                 </div>
 
-                <div className="absolute bottom-0 left-0 right-0 z-10 bg-violet-100/90">
+                <div className="absolute bottom-0 left-0 right-0 z-10 bg-violet-100/90 dark:bg-gray-800/90">
                     <input
                         type="range"
                         min={0}
@@ -228,18 +199,12 @@ export default function StudyLecturePlayer({ videoId }) {
                         value={currentTime || 0}
                         step={0.1}
                         onChange={handleSeek}
-                        className="w-full accent-blue-700"
+                        className="w-full accent-blue-700 dark:accent-blue-300"
                     />
                     <div className="flex flex-wrap items-center justify-between gap-2 p-2 text-xs sm:text-sm">
-                        <button onClick={togglePlay} className="text-xl">
-                            {isPlaying ? <MdPause /> : <MdPlayArrow />}
-                        </button>
-                        <span className="font-mono text-violet-700">
-                            {formatTime(currentTime)} / {formatTime(duration)}
-                        </span>
-                        <button onClick={toggleMute} className="text-xl">
-                            {isMuted ? <MdVolumeOff /> : <MdVolumeUp />}
-                        </button>
+                        <button onClick={togglePlay} className="text-xl">{isPlaying ? <MdPause /> : <MdPlayArrow />}</button>
+                        <span className="font-mono">{formatTime(currentTime)} / {formatTime(duration)}</span>
+                        <button onClick={toggleMute} className="text-xl">{isMuted ? <MdVolumeOff /> : <MdVolumeUp />}</button>
                         <input
                             type="range"
                             min={0}
@@ -257,68 +222,127 @@ export default function StudyLecturePlayer({ videoId }) {
                                 <option key={rate} value={rate}>{rate}x</option>
                             ))}
                         </select>
-
-                        <button onClick={() => setShowNotes(p => !p)} className="text-xl">
-                            <MdNote />
-                        </button>
+                        <button onClick={() => setShowNotes(p => !p)} className="text-xl"><MdNote /></button>
                         <label className="text-xs flex items-center gap-1">
-                            <input type="checkbox" checked={quizEnabled} onChange={() => setQuizEnabled(p => !p)} /> Enable Quiz
+                            <input type="checkbox" checked={quizEnabled} onChange={() => setQuizEnabled(p => !p)} /> Quiz
                         </label>
                         <details>
-                            <summary className="cursor-pointer text-sm text-violet-700 hover:text-violet-900">Advanced</summary>
-                            <div className="mt-2 flex flex-wrap gap-2 text-xs text-white bg-black/80 p-2 rounded">
-                                <button onClick={() => setLoopStart(currentTime)} className="bg-blue-600 px-2 py-1 rounded">
-                                    ⏱ Start: {loopStart ? formatTime(loopStart) : '--:--'}
-                                </button>
-                                <button onClick={() => setLoopEnd(currentTime)} className="bg-blue-600 px-2 py-1 rounded">
-                                    ⏱ End: {loopEnd ? formatTime(loopEnd) : '--:--'}
-                                </button>
-                                <button
-                                    onClick={() => setIsLooping(!isLooping)}
-                                    className={`px-2 py-1 rounded ${isLooping ? 'bg-green-600' : 'bg-gray-600'}`}
-                                >
-                                    {isLooping ? 'Looping On' : 'Looping Off'}
+                            <summary className="cursor-pointer">Advanced</summary>
+                            <div className="mt-2 flex flex-wrap gap-2 text-xs dark:text-white bg-black/80 p-2 rounded">
+                                <button onClick={() => setLoopStart(currentTime)} className="bg-blue-600 px-2 py-1 rounded">⏱ Start</button>
+                                <button onClick={() => setLoopEnd(currentTime)} className="bg-blue-600 px-2 py-1 rounded">⏱ End</button>
+                                <button onClick={() => setIsLooping(!isLooping)} className={`px-2 py-1 rounded ${isLooping ? 'bg-green-600' : 'bg-gray-600'}`}>
+                                    {isLooping ? 'Loop On' : 'Loop Off'}
                                 </button>
                                 {bookmarks.map((time, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => playerRef.current?.seekTo(time)}
-                                        className="bg-yellow-500 text-black px-2 py-1 rounded"
-                                    >
-                                        ⭐ {formatTime(time)}
-                                    </button>
+                                    <button key={idx} onClick={() => playerRef.current?.seekTo(time)} className="bg-yellow-500 text-black px-2 py-1 rounded">⭐ {formatTime(time)}</button>
                                 ))}
                             </div>
                         </details>
-                        <button onClick={toggleFullscreen} className="text-xl">
-                            {isFullscreen ? <MdFullscreenExit /> : <MdFullscreen />}
-                        </button>
+                        <button onClick={toggleFullscreen} className="text-xl">{isFullscreen ? <MdFullscreenExit /> : <MdFullscreen />}</button>
                     </div>
                 </div>
 
                 {showQuiz && (
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-30">
-                        <div className="bg-white p-4 rounded shadow-lg">
-                            <h2 className="text-lg font-semibold mb-2">Quiz</h2>
-                            <QuizCard />
+                    <div className="absolute inset-0 bg-black/70 z-40 flex items-center justify-center px-4">
+                        <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-6 rounded-lg shadow-xl w-full max-w-xl">
+                            {!quizCompleted ? (
+                                <>
+                                    {!quizStarted ? (
+                                        <>
+                                            <h2 className="text-xl font-bold mb-3">📘 Enough learning for now?</h2>
+                                            <p className="text-sm text-gray-700 dark:text-gray-300 mb-6">
+                                                Let's test your knowledge and solidify what you've learned.
+                                            </p>
+                                            <div className="flex justify-center gap-4">
+                                                <button
+                                                    onClick={() => setQuizStarted(true)}
+                                                    className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
+                                                >
+                                                    ✅ Yes, I’m ready!
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setShowQuiz(false);
+                                                        playerRef.current?.playVideo();
+                                                    }}
+                                                    className="px-4 py-2 bg-gray-300 hover:bg-gray-400 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded"
+                                                >
+                                                    ❌ No, continue watching
+                                                </button>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <QuizCard
+                                            question={quizData[triggeredQuizzes.length - 1]}
+                                            onComplete={(correct, attempted) => {
+                                                setQuizCompleted(true);
+                                                setAnalytics([
+                                                    { name: 'Correct', value: correct },
+                                                    { name: 'Incorrect', value: attempted - correct },
+                                                ]);
+                                            }}
+                                            onClose={() => {
+                                                setShowQuiz(false);
+                                                setQuizStarted(false);
+                                                setQuizCompleted(false);
+                                                setAnalytics(null);
+                                                playerRef.current?.playVideo();
+                                            }}
+                                        />
+                                    )}
+                                </>
+                            ) : (
+                                <div className="space-y-4">
+                                    <h3 className="text-center font-semibold text-lg text-green-600 dark:text-green-400">🎯 Quiz Results</h3>
+                                    <ResponsiveContainer width="100%" height={200}>
+                                        <PieChart>
+                                            <Pie
+                                                data={analytics}
+                                                cx="50%"
+                                                cy="50%"
+                                                outerRadius={60}
+                                                dataKey="value"
+                                                label
+                                            >
+                                                <Cell fill="#10B981" />
+                                                <Cell fill="#EF4444" />
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend />
+                                        </PieChart>
+                                    </ResponsiveContainer>
+                                    <div className="text-center">
+                                        <button
+                                            onClick={() => {
+                                                setShowQuiz(false);
+                                                setQuizStarted(false);
+                                                setQuizCompleted(false);
+                                                setAnalytics(null);
+                                                playerRef.current?.playVideo();
+                                            }}
+                                            className="mt-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
+                                        >
+                                            🚀 Continue Watching
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 )}
+
             </div>
-            {/* Notes panel, outside video container */}
+
+            {/* Notes */}
             {showNotes && (
-                <div className="relative w-1/3 h-full bg-white z-20 p-4 shadow-lg overflow-auto transition-all duration-300 flex flex-col">
+                <div className="relative w-full sm:w-1/3 bg-white dark:bg-gray-800 z-20 p-4 shadow-lg overflow-auto transition-all duration-300 flex flex-col">
                     <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-lg font-semibold">📝 Your Notes</h2>
-                        <button
-                            onClick={() => setShowNotes(false)}
-                            className="text-sm px-2 py-1 bg-red-500 text-white rounded"
-                        >
-                            Close
-                        </button>
+                        <h2 className="text-lg font-semibold">📝 Notes</h2>
+                        <button onClick={() => setShowNotes(false)} className="text-sm px-2 py-1 bg-red-500 text-white rounded">Close</button>
                     </div>
                     <textarea
-                        className="w-full flex-1 border border-gray-300 p-2 rounded text-sm resize-none"
+                        className="w-full flex-1 border border-gray-300 dark:border-gray-600 p-2 rounded text-sm bg-white dark:bg-gray-900 text-black dark:text-white resize-none"
                         value={notes}
                         onChange={(e) => setNotes(e.target.value)}
                         placeholder="Write your notes here..."
