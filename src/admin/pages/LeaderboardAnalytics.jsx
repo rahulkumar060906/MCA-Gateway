@@ -4,7 +4,7 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 import { Dialog } from '@headlessui/react';
-import { fetchLeaderboardData } from '../api/adminApi';
+import { fetchTopScorers } from '../api/adminApi';
 
 const COLORS = ['#4F46E5', '#10B981', '#F59E0B', '#EF4444', '#6366F1', '#EC4899'];
 
@@ -20,7 +20,7 @@ export default function LeaderboardAnalytics() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await fetchLeaderboardData(selectedPeriod); // pass filter
+      const res = await fetchTopScorers(selectedPeriod); // pass filter
       setLeaderboard(res.data.topUsers || []);
       setAllLeaderboard(res.data.allUsers || []);
     } catch (err) {
