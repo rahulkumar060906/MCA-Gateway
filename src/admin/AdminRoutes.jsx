@@ -6,6 +6,7 @@ import TestManagement from './pages/TestManagement';
 import LeaderboardAnalytics from './pages/LeaderboardAnalytics';
 import FeedbackPage from './pages/FeedbackPage';
 import AdminSettings from './pages/AdminSettings';
+import Announcements from './pages/AdminAnnouncement';
 
 export default function AdminRoutes() {
     return (
@@ -17,6 +18,7 @@ export default function AdminRoutes() {
             <Route path="leaderboard" element={<LeaderboardAnalytics />} />
             <Route path="feedback" element={<FeedbackPage />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="announcements" element={<Announcements />} />
         </Routes>
     );
 }
