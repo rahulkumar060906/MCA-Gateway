@@ -239,125 +239,114 @@ export default function NimcetTestPage() {
         <>
             {showSummary && renderSummaryModal()}
             {showLeave && renderLeaveModal()}
-            <div className="flex min-h-screen bg-gray-50 dark:bg-gray-900 font-sans">
-                {/* Main test area: now on the left, wider */}
-                <div className="w-3/4 flex flex-col min-h-screen">
-                    {/* Header */}
-                    <div className="flex items-center justify-between px-8 py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700" style={{ height: '10vh' }}>
-                        <button onClick={handleLeave} className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-semibold"><FaSignOutAlt className='inline mr-1' /> Leave
+            <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50 dark:bg-gray-900 font-sans">
+    {/* Main test area */}
+    <div className="w-full lg:w-3/4 flex flex-col min-h-screen">
+        {/* Header */}
+        <div className="flex flex-wrap items-center justify-between px-4 sm:px-8 py-4 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+            <button onClick={handleLeave} className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg font-semibold text-sm mb-2 sm:mb-0"><FaSignOutAlt className='inline mr-1' /> Leave</button>
+            <span className="font-bold text-md lg:text-lg text-indigo-700 order-first w-full sm:w-auto sm:order-none text-center mb-2 sm:mb-0">NIMCET PRACTICE 2007</span>
+            <span className="text-gray-700 dark:text-gray-200 font-semibold text-sm">Time Left: <span className="font-mono">{formatTime(timer)}</span></span>
+            <button onClick={handleSubmit} className="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-2 rounded-lg font-semibold text-sm mt-2 sm:mt-0">Submit<FaPaperPlane className='inline ml-1' /></button>
+        </div>
+
+        {/* Main question area */}
+        <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+            <div className="w-full max-w-5xl bg-white dark:bg-gray-800 p-4 sm:p-6 shadow-lg rounded-xl flex flex-col justify-center">
+                <div className="mb-4 text-gray-800 dark:text-gray-100 font-semibold text-xl sm:text-2xl">Question {current + 1}:</div>
+                <div className="mb-6 text-gray-700 dark:text-gray-200 text-base sm:text-lg min-h-[50px] sm:min-h-[60px]">{questions[current].question}</div>
+                <div className="space-y-3 sm:space-y-5">
+                    {questions[current].options.map((opt, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => handleSelect(idx)}
+                            className={`block w-full text-left px-4 py-3 sm:px-6 sm:py-4 rounded-lg border-2 transition text-base sm:text-lg
+                                ${selected[current] === idx ? 'bg-indigo-100 dark:bg-indigo-900 border-indigo-500 font-bold' : 'bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-indigo-50 dark:hover:bg-gray-600'}
+                            `}
+                        >
+                            {String.fromCharCode(65 + idx)}. {opt}
                         </button>
-                        <span className="font-bold text-lg text-indigo-700">NIMCET PRACTICE 2007</span>
-                        <span className="text-gray-700 dark:text-gray-200 font-semibold">Time Left: <span className="font-mono">{formatTime(timer)}</span></span>
-                        <button onClick={handleSubmit} className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl font-semibold">Submit<FaPaperPlane className='inline ml-1' />
-                        </button>
-
-                    </div>
-                    {/* Main question area - increased width/height */}
-                    <div className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900 " style={{ height: '70vh' }}>
-                        <div className="w-full max-w-5xl bg-white dark:bg-gray-800 p-6  shadow-2xl flex flex-col justify-center">
-                            <div className="mb-6 text-gray-800 dark:text-gray-100 font-semibold text-2xl">Question {current + 1}:</div>
-                            <div className="mb-6 text-gray-700 dark:text-gray-200 text-lg min-h-[60px]">{questions[current].question}</div>
-                            <div className="space-y-5">
-                                {questions[current].options.map((opt, idx) => (
-                                    <button
-                                        key={idx}
-                                        onClick={() => handleSelect(idx)}
-                                        className={`block w-full text-left px-6 py-4 rounded-lg border-2 transition text-lg
-                    ${selected[current] === idx ? 'bg-indigo-100 border-indigo-500 font-bold' : 'bg-gray-100 border-gray-300 hover:bg-indigo-50'}
-                  `}
-                                    >
-                                        {String.fromCharCode(65 + idx)}. {opt}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                    {/* Footer */}
-                    <div className="flex items-center justify-between px-12 py-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700" style={{ height: '10vh' }}>
-
-                        <button onClick={handlePrev} className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded-full flex items-center text-lg"><FaArrowLeft className="mr-2" /> Prev</button>
-
-                        <button onClick={handleMark} className={`px-5 py-2 rounded-full flex items-center font-semibold text-lg ${marked.includes(current) ? 'bg-yellow-400 text-white' : 'bg-yellow-200 text-yellow-900'}`}><FaFlag className="mr-2" /> Mark for Review</button>
-
-                        <span className="text-gray-700 dark:text-gray-200 font-semibold text-lg">{current + 1} / {totalQuestions}</span>
-                        <button onClick={handleClear} className="bg-purple-400 hover:bg-purple-500 text-white px-5 py-2 rounded-full flex items-center text-lg"><FaEraser className="mr-2" /> Clear</button>
-
-                        <button onClick={handleNext} className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-5 py-2 rounded-full flex items-center text-lg">Next <FaArrowRight className="ml-2" /></button>
-                    </div>
+                    ))}
                 </div>
-
-                {/* Navigation column: now on the right, narrower */}
-                <div className="w-1/4 bg-white dark:bg-gray-800 p-4 border-l border-gray-200 dark:border-gray-700 flex flex-col">
-                    <div className=" text-center py-2 bg-white dark:bg-gray-800 border-b border-gray-400 dark:border-gray-700 mb-1 " >
-                        <span className="text-gray-700 dark:text-gray-200 font-bold">Review and Summary</span>
-                    </div>
-                    {/* Tips Section */}
-                    <div className="my-2  p-2 bg-indigo-50 dark:bg-gray-700 rounded-lg shadow text-left ">
-                        <h3 className="font-semibold text-indigo-700 dark:text-indigo-200 mb-2 text-base">Tips</h3>
-                        <ul className="list-disc pl-5 text-sm text-gray-700 dark:text-gray-200 space-y-1">
-                            <li>Do not refresh or close the tab during the test.</li>
-                            <li>Read each question carefully before answering.</li>
-                            <li>Use the navigation panel to move between questions.</li>
-                        </ul>
-                    </div>
-                    <div className="mt-2 grid grid-cols-2 grid-rows-2 gap-2">
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="w-6 h-6 text-center rounded-full bg-green-400 border border-green-500 inline-block">A</span>
-                            <span className="text-sm">Answered</span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="w-6 h-6 text-center rounded-full bg-gray-200 border border-gray-300 inline-block">N</span>
-                            <span className="text-sm">Not answered</span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="w-6 h-6 text-center rounded-full bg-sky-600 border border-sky-500 inline-block">M</span>
-                            <span className="text-sm">Marked for review</span>
-                        </div>
-                        <div className="flex items-center gap-2 mb-2">
-                            <span className="w-10 h-6 text-center rounded-full bg-yellow-500 border border-yellow-600 inline-block">M</span>
-                            <span className="text-sm">Answered but marked for review</span>
-                        </div>
-                    </div>
-
-                    {/* Sectioned question navigation with scroll */}
-                    <div className="mt-6  flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-400 scrollbar-track-indigo-100" style={{ maxHeight: '35vh' }}>
-                        {['Mathematics', 'Reasoning', 'Computer', 'English'].map((section) => (
-                            <div key={section}>
-                                <h3 className="font-bold text-indigo-600 mb-1 text-lg pl-1">{section}</h3>
-                                <div className="grid ml-2 grid-cols-5 gap-1 mb-2">
-                                    {questions
-                                        .map((q, idx) => ({ ...q, idx }))
-                                        .filter(q => q.subject === section)
-                                        .map(q => {
-                                            const isAnswered = selected[q.idx] !== null;
-                                            const isMarked = marked.includes(q.idx);
-                                            return (
-                                                <button
-                                                    key={q.id}
-                                                    onClick={() => setCurrent(q.idx)}
-                                                    className={`w-8 h-8 rounded-full border font-semibold text-xs transition-colors
-                                  ${isMarked && isAnswered
-                                                            ? 'bg-yellow-500 border-yellow-600 text-yellow-900'
-                                                            : isMarked
-                                                                ? 'bg-sky-600 border-sky-500 text-yellow-900'
-                                                                : isAnswered
-                                                                    ? 'bg-green-400 border-green-500 text-green-900'
-                                                                    : 'bg-gray-200 border-gray-300 text-gray-700'}
-                                  ${current === q.idx ? 'ring-2 ring-indigo-500' : ''}
-                                `}
-                                                    title={`Q${q.idx + 1}`}
-                                                >
-                                                    {q.idx + 1}
-                                                </button>
-                                            );
-                                        })}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
             </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex flex-wrap items-center justify-between px-4 sm:px-12 py-3 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+            <button onClick={handlePrev} className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-full flex items-center text-sm sm:text-lg mb-2 sm:mb-0"><FaArrowLeft className="mr-2" /> Prev</button>
+            <button onClick={handleMark} className={`px-4 py-2 rounded-full flex items-center font-semibold text-sm sm:text-lg ${marked.includes(current) ? 'bg-yellow-400 text-white' : 'bg-yellow-200 text-yellow-900'}`}><FaFlag className="mr-2" /> Mark</button>
+            <span className="text-gray-700 dark:text-gray-200 font-semibold text-sm sm:text-lg order-first w-full sm:w-auto sm:order-none text-center mb-2 sm:mb-0">{current + 1} / {totalQuestions}</span>
+            <button onClick={handleClear} className="bg-purple-400 hover:bg-purple-500 text-white px-4 py-2 rounded-full flex items-center text-sm sm:text-lg"><FaEraser className="mr-2" /> Clear</button>
+            <button onClick={handleNext} className="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-full flex items-center text-sm sm:text-lg mb-2 sm:mb-0">Next <FaArrowRight className="ml-2" /></button>
+        </div>
+    </div>
+
+    {/* Navigation column */}
+    <div className="w-full lg:w-1/4 bg-white dark:bg-gray-800 p-4 border-l-0 lg:border-l border-gray-200 dark:border-gray-700 flex flex-col">
+        <div className="text-center py-2 bg-white dark:bg-gray-800 border-b border-gray-400 dark:border-gray-700 mb-1">
+            <span className="text-gray-700 dark:text-gray-200 font-bold">Review and Summary</span>
+        </div>
+        <div className="my-2 p-2 bg-indigo-50 dark:bg-gray-700 rounded-lg shadow text-left">
+            <h3 className="font-semibold text-indigo-700 dark:text-indigo-200 mb-2 text-base">Tips</h3>
+            <ul className="list-disc pl-5 text-sm text-gray-700 dark:text-gray-200 space-y-1">
+                <li>Do not refresh or close the tab.</li>
+                <li>Use the navigation panel to move between questions.</li>
+            </ul>
+        </div>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+            <div className="flex items-center gap-2">
+                <span className="w-6 h-6 flex items-center justify-center rounded-full bg-green-400 border border-green-500"></span>
+                <span className="text-sm">Answered</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 border border-gray-300"></span>
+                <span className="text-sm">Not Answered</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="w-6 h-6 flex items-center justify-center rounded-full bg-sky-600 border border-sky-500"></span>
+                <span className="text-sm">Marked</span>
+            </div>
+            <div className="flex items-center gap-2">
+                <span className="w-6 h-6 flex items-center justify-center rounded-full bg-yellow-500 border border-yellow-600"></span>
+                <span className="text-sm">Answered & Marked</span>
+            </div>
+        </div>
+
+        {/* Sectioned question navigation */}
+        <div className="mt-4 flex flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-indigo-400 scrollbar-track-indigo-100" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+            {['Mathematics', 'Reasoning', 'Computer'].map((section) => (
+                <div key={section}>
+                    <h3 className="font-bold text-indigo-600 dark:text-indigo-300 mb-2 text-lg pl-1">{section}</h3>
+                    <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-7 lg:grid-cols-5 gap-2">
+                        {questions
+                            .map((q, idx) => ({ ...q, idx }))
+                            .filter(q => q.subject === section)
+                            .map(q => {
+                                const isAnswered = selected[q.idx] !== null;
+                                const isMarked = marked.includes(q.idx);
+                                let buttonClass = 'bg-gray-200 border-gray-300 text-gray-700';
+                                if (isAnswered && isMarked) buttonClass = 'bg-yellow-500 border-yellow-600 text-white';
+                                else if (isMarked) buttonClass = 'bg-sky-600 border-sky-500 text-white';
+                                else if (isAnswered) buttonClass = 'bg-green-400 border-green-500 text-green-900';
+                                
+                                return (
+                                    <button
+                                        key={q.id}
+                                        onClick={() => setCurrent(q.idx)}
+                                        className={`w-8 h-8 rounded-full border font-semibold text-xs transition-colors ${buttonClass} ${current === q.idx ? 'ring-2 ring-indigo-500' : ''}`}
+                                        title={`Q${q.idx + 1}`}
+                                    >
+                                        {q.idx + 1}
+                                    </button>
+                                );
+                            })}
+                    </div>
+                </div>
+            ))}
+        </div>
+    </div>
+</div>
+
         </>
     );
 }

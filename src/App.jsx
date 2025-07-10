@@ -16,13 +16,9 @@ import NimcetTestPage from './pages/NimcetTestPage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import AdminLayout from './admin/components/AdminLayout';
 import AdminRoute from './admin/components/AdminRoute';
-import AdminDashboard from './admin/pages/AdminDashboard';
-import UserManagement from './admin/pages/UserManagement';
-import TestManagement from './admin/pages/TestManagement';
-import LeaderboardAnalytics from './admin/pages/LeaderboardAnalytics';
-import FeedbackPage from './admin/pages/FeedbackPage';
-import AdminSettings from './admin/pages/AdminSettings';
+import AdminRoutes from './admin/AdminRoutes';
 import TodoWidget from './components/Todo';
+import StudyLecturePlayer from './components/StudyPage';
 
 // AuthContext for global authentication state
 const AuthContext = React.createContext();
@@ -95,6 +91,7 @@ function App() {
                 </PrivateRoute>
               }
             />
+            <Route path='/lecture' element={<StudyLecturePlayer videoId={"yGH8k5iCoaw"} />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/notice" element={<NoticeBoard />} />
             <Route
@@ -147,32 +144,25 @@ function App() {
             />
             <Route path="/login/success" element={<LoginSuccess />} />
 
-            {/* Admin panel routes - nested under /admin/* */}
+            {/* Admin panel routes */}
             <Route
               path="/admin/*"
               element={
                 <AdminRoute>
-                  <AdminLayout />
+                  <AdminLayout>
+                    <AdminRoutes />
+                  </AdminLayout>
                 </AdminRoute>
               }
-            >
-              <Route index element={<AdminDashboard />} />
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<UserManagement />} />
-              <Route path="tests" element={<TestManagement />} />
-              <Route path="leaderboard" element={<LeaderboardAnalytics />} />
-              <Route path="feedback" element={<FeedbackPage />} />
-              <Route path="settings" element={<AdminSettings />} />
-            </Route>
+            />
           </Routes>
         </main>
         {!hideNavFooter && (
           <>
-            
             <TodoWidget />
+            <Footer />
           </>
         )}
-        {!hideNavFooter && <Footer />}
       </div>
     </AuthProvider>
   );
