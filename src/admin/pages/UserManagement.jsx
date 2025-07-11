@@ -1,100 +1,114 @@
-import React, { useState } from 'react';
-import { FaSearch, FaUserCircle, FaTrashAlt, FaEdit } from 'react-icons/fa';
-
-const mockUsers = [
-  { id: 1, name: 'Aarav Sharma', email: 'aarav@example.com', role: 'Student' },
-  { id: 2, name: 'Meera Kapoor', email: 'meera@example.com', role: 'Student' },
-  { id: 3, name: 'Rohit Verma', email: 'rohit@example.com', role: 'Admin' },
-];
+import React, { useEffect, useState } from 'react';
+import { fetchUsers, deleteUser, promoteUser } from '../api/adminApi';
 
 export default function UserManagement() {
+  const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
-  const [users, setUsers] = useState(mockUsers);
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(1);
+  const [loading, setLoading] = useState(true);
 
-  const filteredUsers = users.filter(
-    (user) =>
-      user.name.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this user?')) {
-      setUsers(users.filter((user) => user.id !== id));
+  const loadUsers = async () => {
+    setLoading(true);
+    try {
+      const res = await fetchUsers({ page, search });
+      setUsers(res.data.users);
+      setPages(res.data.pages);
+    } catch (err) {
+      alert('Error loading users');
     }
+    setLoading(false);
   };
 
-  const handleEdit = (id) => {
-    alert(`Edit functionality for user ID ${id} is not implemented yet.`);
+  useEffect(() => {
+    loadUsers();
+  }, [page, search]);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm('Delete user?')) return;
+    await deleteUser(id);
+    loadUsers();
+  };
+
+  const handlePromote = async (id) => {
+    await promoteUser(id);
+    loadUsers();
   };
 
   return (
-    <div className="p-6 bg-white dark:bg-gray-900 rounded-xl shadow">
-      <h2 className="text-2xl font-bold text-purple-700 dark:text-purple-300 mb-6">
-        👥 User Management
-      </h2>
-
-      {/* Search Bar */}
-      <div className="relative mb-6 max-w-sm">
+    <div className="p-6">
+      <h2 className="text-2xl font-bold mb-4">User Management</h2>
+      <div className="mb-4 flex gap-2">
         <input
           type="text"
-          placeholder="Search users by name or email..."
+          placeholder="Search by name/email/username"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full px-4 py-2 pl-10 border rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="px-4 py-2 border rounded"
         />
-        <FaSearch className="absolute left-3 top-3 text-gray-500 dark:text-gray-300" />
       </div>
-
-      {/* User Table */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm text-left text-gray-800 dark:text-gray-200">
-          <thead>
-            <tr className="border-b border-gray-300 dark:border-gray-600">
-              <th className="py-2 px-3">User</th>
-              <th className="py-2 px-3">Email</th>
-              <th className="py-2 px-3">Role</th>
-              <th className="py-2 px-3 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers.length === 0 ? (
-              <tr>
-                <td colSpan="4" className="text-center py-6 text-gray-400">
-                  No users found.
-                </td>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <>
+          <table className="w-full table-auto border-collapse">
+            <thead>
+              <tr className="bg-gray-100 dark:bg-blue-900">
+                <th className="p-2">Name</th>
+                <th className="p-2">Email</th>
+                <th className="p-2">Role</th>
+                <th className="p-2">Actions</th>
               </tr>
-            ) : (
-              filteredUsers.map((user) => (
-                <tr
-                  key={user.id}
-                  className="border-b border-gray-200 dark:border-gray-700 hover:bg-purple-50 dark:hover:bg-gray-800"
-                >
-                  <td className="flex items-center gap-2 py-3 px-3">
-                    <FaUserCircle className="text-lg text-purple-500" />
-                    {user.name}
-                  </td>
-                  <td className="py-3 px-3">{user.email}</td>
-                  <td className="py-3 px-3">{user.role}</td>
-                  <td className="py-3 px-3 text-center space-x-4">
+            </thead>
+            <tbody>
+              {users.map((u) => (
+                <tr key={u._id} className="border-t">
+                  <td className="p-2">{u.fullName}</td>
+                  <td className="p-2">{u.email}</td>
+                  <td className="p-2">{u.role}</td>
+                  <td className="p-2 space-x-2">
+                    {u.role !== 'admin' && (
+                      <button
+                        onClick={() => handlePromote(u._id)}
+                        className="text-sm bg-green-600 text-white px-3 py-1 rounded"
+                      >
+                        Promote
+                      </button>
+                    )}
                     <button
-                      className="text-blue-600 hover:text-blue-800"
-                      onClick={() => handleEdit(user.id)}
+                      onClick={() => handleDelete(u._id)}
+                      className="text-sm bg-red-600 text-white px-3 py-1 rounded"
                     >
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-800"
-                      onClick={() => handleDelete(user.id)}
-                    >
-                      <FaTrashAlt />
+                      Delete
                     </button>
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
-      </div>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Pagination */}
+          <div className="mt-4 flex justify-between items-center">
+            <button
+              className="px-4 py-1 bg-gray-300 rounded"
+              onClick={() => setPage((p) => Math.max(p - 1, 1))}
+              disabled={page === 1}
+            >
+              Prev
+            </button>
+            <span>
+              Page {page} of {pages}
+            </span>
+            <button
+              className="px-4 py-1 bg-gray-300 rounded"
+              onClick={() => setPage((p) => Math.min(p + 1, pages))}
+              disabled={page === pages}
+            >
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

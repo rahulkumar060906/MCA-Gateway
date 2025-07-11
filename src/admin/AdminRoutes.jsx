@@ -1,24 +1,29 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import AdminDashboard from './pages/AdminDashboard';
-import UserManagement from './pages/UserManagement';
-import TestManagement from './pages/TestManagement';
-import LeaderboardAnalytics from './pages/LeaderboardAnalytics';
-import FeedbackPage from './pages/FeedbackPage';
-import AdminSettings from './pages/AdminSettings';
-import Announcements from './pages/AdminAnnouncement';
+import React, { useEffect, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import axios from 'axios';
 
-export default function AdminRoutes() {
-    return (
-        <Routes>
-            <Route index element={<AdminDashboard />} />
-            <Route path="dashboard" element={<AdminDashboard />} />
-            <Route path="users" element={<UserManagement />} />
-            <Route path="tests" element={<TestManagement />} />
-            <Route path="leaderboard" element={<LeaderboardAnalytics />} />
-            <Route path="feedback" element={<FeedbackPage />} />
-            <Route path="settings" element={<AdminSettings />} />
-            <Route path="announcements" element={<Announcements />} />
-        </Routes>
-    );
+export default function AdminRoute({ children }) {
+  const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const verifyAdmin = async () => {
+      try {
+        const res = await axios.get('/api/admin/verify', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setIsAdmin(res.data?.isAdmin);
+      } catch {
+        setIsAdmin(false);
+      }
+      setLoading(false);
+    };
+    verifyAdmin();
+  }, []);
+
+  if (loading) return <div className="p-10 text-center">Checking Admin Access...</div>;
+  if (!isAdmin) return <Navigate to="/" replace />;
+  return children;
 }
